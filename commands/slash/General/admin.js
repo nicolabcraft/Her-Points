@@ -33,7 +33,7 @@ module.exports = {
     },
     run: async (client, interaction, config) => {
 
-        let url = `https://localhost/api/index.php?id=${interaction.user.id}&conf=${config.Type}`;
+        let url = `https://her-network.fr/api_bot/index.php?id=${interaction.user.id}&conf=${config.Type}`;
 
         if(!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)){
             return;
