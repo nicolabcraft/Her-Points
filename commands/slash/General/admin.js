@@ -26,43 +26,70 @@ module.exports = {
             name: "config",
             description: "Configuration admin",
             type: 1,
+        },
+        {
+            name: "info",
+            description: "Informations sur l'utilisateur",
+            type: 1,
         }
     ],
     permissions: {
         DEFAULT_MEMBER_PERMISSIONS: "SendMessages"
     },
     run: async (client, interaction, config) => {
-
-        if(!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)){
-            return;
-        }else{
-            const colors = new ActionRowBuilder()
-                .addComponents(
-                    new StringSelectMenuBuilder()
-                        .setCustomId('SelectAdminConfig')
-                        .setPlaceholder('Clique moi dessus!')
-                        .addOptions(
-                            {
-                                label: 'Connexions multiples',
-                                description: 'Activez/Désactivez les connexions multiples',
-                                value: 'multiplesconnexions',
-                            },
-                            /* {
-                                label: 'You can select me too',
-                                description: 'This is also a description',
-                                value: 'second_option',
-                            }, */
-                        ),
-                );
-    
-            const embeddrop = new EmbedBuilder()
-                .setTitle(`Configurations des paramètres`)
-                .setDescription(
-                    `Menu des préférences d'aministration
-                    
-                    Vous utilisez la version ${config.Divers.version}`
-                )
-            interaction.reply({ embeds: [embeddrop], components: [colors], ephemeral: true, });
-        }
+        if(interaction.options._subcommand == "config"){
+            if(!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)){
+                return;
+            }else{
+                const colors = new ActionRowBuilder()
+                    .addComponents(
+                        new StringSelectMenuBuilder()
+                            .setCustomId('SelectAdminConfig')
+                            .setPlaceholder('Clique moi dessus!')
+                            .addOptions(
+                                {
+                                    label: 'Connexions multiples',
+                                    description: 'Activez/Désactivez les connexions multiples',
+                                    value: 'multiplesconnexions',
+                                },
+                            ),
+                    );
+        
+                const embeddrop = new EmbedBuilder()
+                    .setTitle(`Configurations des paramètres`)
+                    .setDescription(
+                        `Menu des préférences d'aministration
+                        
+                        Vous utilisez la version ${config.Divers.version}`
+                    )
+                interaction.reply({ embeds: [embeddrop], components: [colors], ephemeral: true, });
+            }}
+        if(interaction.options._subcommand == "info"){
+            if(!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)){
+                return;
+            }else{
+                const colors = new ActionRowBuilder()
+                    .addComponents(
+                        new StringSelectMenuBuilder()
+                            .setCustomId('SelectUserInfo')
+                            .setPlaceholder('Clique moi dessus!')
+                            .addOptions(
+                                {
+                                    label: 'Informations sur un utilisateur',
+                                    description: 'Informations sur un utilisateur',
+                                    value: 'user',
+                                },
+                            ),
+                    );
+        
+                const embeddrop = new EmbedBuilder()
+                    .setTitle(`Informations sur l'utilisateur`)
+                    .setDescription(
+                        `Menu des informations sur un utilisateur
+                        
+                        Vous utilisez la version ${config.Divers.version}`
+                    )
+                interaction.reply({ embeds: [embeddrop], components: [colors], ephemeral: true, });
+            }}
     },
 };

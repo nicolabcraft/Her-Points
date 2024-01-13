@@ -67,7 +67,7 @@ module.exports = {
                                         content: `<@${interaction.user.id}>`,
                                         embeds:[
                                             new EmbedBuilder()
-                                                .setDescription(`:x: | Les connexions multiples sont désactivées!`)
+                                                .setDescription(`:x: | Les connexions multiples sont désactivées !`)
                                                 .setColor('Red')
                                         ],
                                         ephemeral: false,
@@ -108,7 +108,7 @@ module.exports = {
                                                     content: `<@${interaction.user.id}>`,
                                                     embeds:[
                                                         new EmbedBuilder()
-                                                            .setDescription(`:white_check_mark: | Compte connecté!`)
+                                                            .setDescription(`:white_check_mark: | Compte connecté !`)
                                                             .setColor('Green')
                                                     ],
                                                     ephemeral: false,
@@ -137,7 +137,7 @@ module.exports = {
                                                     content: `<@${interaction.user.id}>`,
                                                     embeds:[
                                                         new EmbedBuilder()
-                                                            .setDescription(`:white_check_mark: | Compte connecté!`)
+                                                            .setDescription(`:white_check_mark: | Compte connecté !`)
                                                             .setColor('Green')
                                                     ],
                                                     ephemeral: false,

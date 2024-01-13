@@ -229,7 +229,7 @@ client.on('interactionCreate', async (interaction) => {
 
   }
   if(interaction.customId == "SelectPreferences"){
-    const sélectionné = interaction.values[0];
+    const optionSelected = interaction.values[0];
     
     const autotransfert = new EmbedBuilder()
       .setTitle(`Transfert automatique`)
@@ -258,7 +258,7 @@ client.on('interactionCreate', async (interaction) => {
               .setStyle(ButtonStyle.Secondary),
           );
           
-    if(sélectionné == "autotransfert"){
+    if(optionSelected == "autotransfert"){
       if(config.Type == "1"){
         let verififitsenabled = `SELECT * FROM users WHERE id=${interaction.user.id}`
           
@@ -395,9 +395,9 @@ client.on('interactionCreate', async (interaction) => {
   }
 
   if(interaction.customId == "SelectAdminConfig"){
-    const sélectionné = interaction.values[0];
+    const optionSelected = interaction.values[0];
 
-    if(sélectionné == "multiplesconnexions"){
+    if(optionSelected == "multiplesconnexions"){
       const activerow = new ActionRowBuilder()
 			  .addComponents(
           new ButtonBuilder()
