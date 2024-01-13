@@ -34,32 +34,32 @@ var coins_monthly = "200"
 ////////////////////////
 
 module.exports = {
-    name: "economie",
+    name: "eco",
     description: "Replies with pong!",
     type: 1,
     options: [
         {
-            name: "daily",
+            name: "jour",
             description: "Récupérer votre argent quotidient",
             type: 1,
         },
         {
-            name: "weekly",
+            name: "semaine",
             description: "Récupérer votre argent hebdomadaire",
             type: 1,
         },
         {
-            name: "monthly",
+            name: "mois",
             description: "Récupérer votre argent mensuelles",
             type: 1,
         },
         {
-            name: "color",
+            name: "couleur",
             description: "Tentez votre chance en choisissant la bonne couleur!",
             type: 1,
         },
         {
-            name: "number",
+            name: "nombre",
             description: "Tentez votre chance en choisissant le bon numéro!",
             type: 1,
             options: [
@@ -170,7 +170,7 @@ module.exports = {
 
                             //  exports.oldbalance = old_balance;
 
-                            if(interaction.options._subcommand == "daily"){
+                            if(interaction.options._subcommand == "jour"){
                                 if(json.daily == "false") { // if user on cooldown
                                     //add message here if code
                                     interaction.reply({
@@ -211,7 +211,7 @@ module.exports = {
                                     }
                                 }
                             }
-                            if(interaction.options._subcommand == "weekly"){
+                            if(interaction.options._subcommand == "semaine"){
                             
                                 if(json.weekly == "false") { // if user on cooldown
                                     
@@ -253,7 +253,7 @@ module.exports = {
                                 }
                             }
 
-                            if(interaction.options._subcommand == "monthly"){
+                            if(interaction.options._subcommand == "mois"){
                             
                                 if(json.monthly == "false") { // if user on cooldown
                                     
@@ -295,7 +295,7 @@ module.exports = {
                                 }
                             }
 
-                            if(interaction.options._subcommand == "color"){
+                            if(interaction.options._subcommand == "couleur"){
                                 const colors = new ActionRowBuilder()
                                     .addComponents(
                                         new ButtonBuilder()
@@ -347,7 +347,7 @@ module.exports = {
                             }
                         });
 
-                        if(interaction.options._subcommand == "number"){
+                        if(interaction.options._subcommand == "nombre"){
                             function entierAleatoire(min, max){
                                 return Math.floor(Math.random() * (max - min + 1)) + min;
                             }
