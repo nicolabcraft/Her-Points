@@ -22,7 +22,7 @@ module.exports = {
         var userid = userr.user.id
         const user = interaction.options.getUser('utilisateur');
         verifsico = `SELECT * FROM users WHERE id ="${userid}"`
-        connection.query(gettimef(), function(error, results, fields) {
+        connection.query(verifsico, function(error, results, fields) {
             if(results.length == 0){
                 interaction.reply({
                     embeds: [
@@ -77,15 +77,6 @@ module.exports = {
                                     return "false";
                                 }
                             })
-                        }
-                    }
-                }
-                function gettimef(){
-                    if(config.Type == "1"){
-                        return "SELECT * FROM users";
-                    }else{
-                        if(config.Type == "2"){
-                            return "SELECT * FROM botusers";
                         }
                     }
                 }
