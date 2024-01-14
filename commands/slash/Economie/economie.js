@@ -42,14 +42,17 @@ const echeances = {
   jour: {
     id: "daily",
     coints: 50,
+    dayAdd: 1,
   },
   semaine: {
     id: "weekly",
     coints: 120,
+    dayAdd: 7,
   },
   mois: {
     id: "monthly",
     coints: 200,
+    dayAdd: 30.4167,
   },
 };
 
@@ -278,9 +281,12 @@ module.exports = {
               [interaction.user.id]
             )
             .then(function ([results]) {
+              const [echeanceKey, { id: echeanceId, coints: echeanceCoins, dayAdd: echeanceDayAdd }] =
+                echeanceFound;
+
               var AAAAAAbb = results[0];
-              var dateFormat = new Date(Number(AAAAAAbb.daily));
-              dateFormat.setDate(dateFormat.getDate() + 1);
+              var dateFormat = new Date(Number(AAAAAAbb[echeanceKey]));
+              dateFormat.setDate(dateFormat.getDate() + echeanceDayAdd);
               const converted = convertMS(
                 //math.chain(dateFormat.valueOf()).subtract(Date.now())
                 Number(dateFormat.valueOf()) - Date.now()
@@ -290,11 +296,8 @@ module.exports = {
               const echeanceFound = Object.entries(echeances).find(
                 ([key, value]) => key == interaction.options._subcommand
               );
-
-              const [echeanceKey, { id: echeanceId, coints: echeanceCoins }] =
-                echeanceFound;
-
               if (interaction.options._subcommand == echeanceKey) {
+                console.log(AAAAAAbb, json, echeanceId)
                 if (!json[echeanceId]) {
                   // if user on cooldown
                   //add message here if code
@@ -313,6 +316,15 @@ module.exports = {
                 } else {
                   let gettransf = `${client.dbTables.usersSelect} WHERE id=${interaction.user.id}  LIMIT 1`;
                   client.db.execute(gettransf).then(function ([results]) {
+                    console.log([
+                      (results[0].autotransfert = "off")
+                        ? "discord"
+                        : "manager",
+                      echeanceCoins,
+                      `${echeanceKey}time`,
+                      `${echeanceKey}remind`,
+                      echeanceKey
+                    ])
                     givecredits(
                       (results[0].autotransfert = "off")
                         ? "discord"

@@ -179,7 +179,7 @@ client.once("ready", async () => {
         }
     }
 
-    client.logger("BOT","Bot démaré", "Green")
+    client.logger("BOT DÉMARRÉ", null, "Green");
 
     setInterval(client.Remind, 60000);
 });
