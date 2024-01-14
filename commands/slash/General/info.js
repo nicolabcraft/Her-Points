@@ -24,11 +24,13 @@ module.exports = {
                 const user = interaction.options.getUser('user');
                 const member = interaction.options.getMember('user');
                 const embed = new EmbedBuilder()
-                    .setTitle(`Informations de ${user.tag}`)
-                    .addField("Nom d'utilisateur", user.username, true)
-                    .addField(`Solde`, rows[0].balance, true)
-                    .addField(`Crédit`, rowsss[0].credit, true)
-                    .addField("Email", rows[0].email, true)
+                    .setTitle(`Informations de ${user.tag}`).addFields(
+                        {name:"Nom d'utilisateur", value: user.username, inline: true},
+                        {name:"Solde", value: rows[0].balance, inline: true},
+                        {name:"Crédit", value: rowsss[0].credit, inline: true},
+                        {name:"Email", value: rows[0].email, inline: true}
+                    )
+                    .setFooter(`ID: ${user.id}`)
                     .setThumbnail(user.displayAvatarURL({ dynamic: true }))
                     .setColor("RANDOM");
                 interaction.reply({ embeds: [embed], ephemeral: true });
