@@ -583,7 +583,7 @@ module.exports = {
     if (interaction.options._subcommand == "solde") {
       var aa = `${client.dbTables.usersSelect} WHERE id="${interaction.user.id}" LIMIT 1`;
       client.db.execute(aa).then(function ([rows]) {
-        var bb = `${clientSelect} WHERE email='${rows[0].email}'  LIMIT 1`;
+        var bb = `${client.dbTables.clientSelect} WHERE email='${rows[0].email}'  LIMIT 1`;
         client.db.execute(bb).then(function ([rowsss]) {
           return interaction.reply({
             content: `<@${interaction.user.id}>`,
