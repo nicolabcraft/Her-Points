@@ -26,12 +26,12 @@ module.exports = {
                 const embed = new EmbedBuilder()
                     .setTitle(`Informations de ${user.tag}`)
                     .addFields(
+                        {name:"ID", value: user.id.toString(), inline: true},
                         {name:"Nom d'utilisateur", value: user.username, inline: true},
                         {name:"Solde", value: rows[0].balance, inline: true},
                         {name:"Crédit", value: rowsss[0].credit.toString(), inline: true},
                         {name:"Email", value: rows[0].email, inline: true}
                     )
-                    .setFooter(`ID: ${user.id}`)
                     .setThumbnail(user.displayAvatarURL({ dynamic: true }))
                     .setColor("RANDOM");
                 interaction.reply({ embeds: [embed], ephemeral: true });
