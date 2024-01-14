@@ -154,7 +154,7 @@ function SendRemind(userID) {
     config.Type;
 
   if (config.Type == "1") {
-    VerifSiCo = `SELECT * FROM users WHERE id = ${userID}`;
+    VerifSiCo = `SELECT * FROM users WHERE id = ${userID}  LIMIT = 1`;
     connection.query(VerifSiCo, function (error, results, fields) {
       if (results.length == 0) {
         return;
@@ -280,13 +280,13 @@ function SendRemind(userID) {
 const dbTables = {
   usersSelect:
     config.Type == "1"
-      ? "SELECT * FROM `users` LIMIT 1"
-      : "SELECT * FROM `botusers` LIMIT 1",
+      ? "SELECT * FROM `users`"
+      : "SELECT * FROM `botusers`",
   usersUpdate: config.Type == "1" ? "UPDATE `users`" : "UPDATE `botusers`",
   clientSelect:
     config.Type == "1"
-      ? "SELECT * FROM `tblclients` LIMIT 1"
-      : "SELECT * FROM `users` LIMIT 1",
+      ? "SELECT * FROM `tblclients`"
+      : "SELECT * FROM `users`",
       clientUpdate: config.Type == "1" ? "UPDATE `tblclients`" : "UPDATE `users`",
 };
 client.dbTables = dbTables;
