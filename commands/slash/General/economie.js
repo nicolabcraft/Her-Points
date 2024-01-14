@@ -181,19 +181,6 @@ module.exports = {
             const converted = convertMS(
               math.chain(dateFormat.valueOf()).subtract(Date.now())
             ); // Donne 19430j
-            if (error) {
-              return interaction.reply({
-                content: `<@${interaction.user.id}>`,
-                embeds: [
-                  new EmbedBuilder()
-                    .setDescription(
-                      `:x: | Une erreur à été rencontrée lors de la connexion avec la base de données.`
-                    )
-                    .setColor("Red"),
-                ],
-                ephemeral: false,
-              });
-            }
             var old_balance = results[0].balance;
 
             //  exports.oldbalance = old_balance;
@@ -471,7 +458,19 @@ module.exports = {
                 });
               }
             }
-          });
+          }).catch(()=>
+            interaction.reply({
+              content: `<@${interaction.user.id}>`,
+              embeds: [
+                new EmbedBuilder()
+                  .setDescription(
+                    `:x: | Une erreur à été rencontrée lors de la connexion avec la base de données.`
+                  )
+                  .setColor("Red"),
+              ],
+              ephemeral: false,
+            })
+          )
 
           if (interaction.options._subcommand == "nombre") {
             function entierAleatoire(min, max) {
@@ -507,27 +506,23 @@ module.exports = {
                 connection.connect(); */
                 let gettime = `SELECT * FROM users WHERE id=${interaction.user.id}`;
 
-                //connection.query(gettime, function (error, results, fields) {
                 client.db.execute(gettime).then(function ([results]) {
-                  if (error) {
-                    return interaction.reply({
-                      content: `<@${interaction.user.id}>`,
-                      embeds: [
-                        new EmbedBuilder()
-                          .setDescription(
-                            `:x: | Une erreur à été rencontrée lors de la connexion avec la base de données.`
-                          )
-                          .setColor("Red"),
-                      ],
-                      ephemeral: false,
-                    });
-                  }
                   var old_balance = results[0].balance;
 
                   var oldbal = old_balance;
                   // var newbal = math.evaluate(oldbal+coins_daily)
                   var newbal = math.chain(add).add(oldbal);
-                });
+                }).catch(()=>interaction.reply({
+                    content: `<@${interaction.user.id}>`,
+                    embeds: [
+                      new EmbedBuilder()
+                        .setDescription(
+                          `:x: | Une erreur à été rencontrée lors de la connexion avec la base de données.`
+                        )
+                        .setColor("Red"),
+                    ],
+                    ephemeral: false,
+                  }));
                 if (autotransfert == "off") {
                   givecredits("discord", add);
                 } else {
@@ -576,19 +571,6 @@ module.exports = {
                   } else {
                     var GetOlbBal = `SELECT * FROM users WHERE id="${interaction.user.id}"`;
                     client.db.execute(GetOlbBal).then(function ([results]) {
-                      if (error) {
-                        return interaction.reply({
-                          content: `<@${interaction.user.id}>`,
-                          embeds: [
-                            new EmbedBuilder()
-                              .setDescription(
-                                `:x: | Une erreur à été rencontrée lors de la connexion avec la base de données.`
-                              )
-                              .setColor("Red"),
-                          ],
-                          ephemeral: false,
-                        });
-                      } else {
                         var GetBal = `SELECT * FROM tblclients WHERE email="${row[0].email}"`;
 
                         client.db.execute(GetBal).then(function ([rows]) {
@@ -620,8 +602,17 @@ module.exports = {
                               });
                           });
                         });
-                      }
-                    });
+                    }).catch(()=>interaction.reply({
+                        content: `<@${interaction.user.id}>`,
+                        embeds: [
+                          new EmbedBuilder()
+                            .setDescription(
+                              `:x: | Une erreur à été rencontrée lors de la connexion avec la base de données.`
+                            )
+                            .setColor("Red"),
+                        ],
+                        ephemeral: false,
+                      }))
                   }
                 });
             } else {
@@ -646,19 +637,6 @@ module.exports = {
                     var GetOlbBal = `SELECT * FROM botusers WHERE id="${interaction.user.id}"`;
 
                     client.db.execute(GetOlbBal).then(function ([rows]) {
-                      if (error) {
-                        return interaction.reply({
-                          content: `<@${interaction.user.id}>`,
-                          embeds: [
-                            new EmbedBuilder()
-                              .setDescription(
-                                `:x: | Une erreur à été rencontrée lors de la connexion avec la base de données.`
-                              )
-                              .setColor("Red"),
-                          ],
-                          ephemeral: false,
-                        });
-                      } else {
                         var GetBal = `SELECT * FROM users WHERE email="${row[0].email}"`;
 
                         client.db.execute(GetBal).then(function ([rows]) {
@@ -691,8 +669,18 @@ module.exports = {
                               });
                           });
                         });
-                      }
-                    });
+                      
+                    }).catch(()=>interaction.reply({
+                        content: `<@${interaction.user.id}>`,
+                        embeds: [
+                          new EmbedBuilder()
+                            .setDescription(
+                              `:x: | Une erreur à été rencontrée lors de la connexion avec la base de données.`
+                            )
+                            .setColor("Red"),
+                        ],
+                        ephemeral: false,
+                      }));
                   }
                 });
             }
