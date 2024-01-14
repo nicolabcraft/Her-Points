@@ -1,5 +1,4 @@
 const { EmbedBuilder, Collection, ActionRowBuilder, StringSelectMenuBuilder,ButtonBuilder, ButtonStyle, Events, PermissionsBitField } = require("discord.js");
-const math = require('mathjs');
 const config = require('../../../config/config.js');
 
 const mysql = require('mysql');
