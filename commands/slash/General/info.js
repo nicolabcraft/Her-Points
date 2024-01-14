@@ -40,7 +40,7 @@ module.exports = {
                 });
             }else{
                 var connection = mysql.createConnection(config.Bdd);
-                var aa = `SELECT * FROM users WHERE id="${interaction.user.id}"`
+                var aa = `SELECT * FROM users WHERE id="${userid}"`
                 connection.query(aa, function (err, rows, fields) {
                     var bb = `SELECT * FROM tblclients WHERE email='${rows[0].email}'`
                     connection.query(bb, function (err, rowsss, fields) {
