@@ -171,7 +171,7 @@ module.exports = {
       config.Type;
     var connection = mysql.createConnection(config.Bdd);
     const [results] = await client.db.execute(
-      `${client.dbTables.usersSelect} WHERE id = ?`,
+      `${client.dbTables.usersSelect} WHERE \`id\` = ?`,
       [interaction.user.id]
     );
 
@@ -308,7 +308,7 @@ module.exports = {
         .then((res) => res.json())
         .then((json) => {
           client.db
-            .execute(`${client.dbTables.usersSelect} WHERE id = ?`, [
+            .execute(`${client.dbTables.usersSelect} WHERE  \`id\` = ?`, [
               interaction.user.id,
             ])
             .then(function ([results]) {
