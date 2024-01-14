@@ -103,7 +103,7 @@ function SendRemind(userID){
             if(json.dailyremind == "true" && json.daily == "true"){
               client.users.cache.get(userID).send({embeds:[
                 new EmbedBuilder()
-                    .setDescription(`Salut! \nLa commande </economie daily:${client.user.id}> est prête!`)
+                    .setDescription(`Salut! \nLa commande </eco jour:${client.user.id}> est prête!`)
                     .setFooter({ text:"Envoyé automatiquement " + client.user.tag})
               ],});
               DisableDailyRemind = `UPDATE users SET dailyremind="false"`
@@ -121,7 +121,7 @@ function SendRemind(userID){
             if(json.weeklyremind == "true" && json.weekly == "true"){
               client.users.cache.get(userID).send({embeds:[
                 new EmbedBuilder()
-                    .setDescription(`Salut! \nLa commande </economie weekly:${client.user.id}> est prête!`)
+                    .setDescription(`Salut! \nLa commande </eco semaine:${client.user.id}> est prête!`)
                     .setFooter({ text:"Envoyé automatiquement " + client.user.tag})
               ],});
               DisableWeeklyRemind = `UPDATE users SET weeklyremind="false"`
@@ -139,7 +139,7 @@ function SendRemind(userID){
             if(json.monthlyremind == "true" && json.monthly == "true"){
               client.users.cache.get(userID).send({embeds:[
                 new EmbedBuilder()
-                    .setDescription(`Salut! \nLa commande </economie monthly:${client.user.id}> est prête!`)
+                    .setDescription(`Salut! \nLa commande </eco mois:${client.user.id}> est prête!`)
                     .setFooter({ text:"Envoyé automatiquement " + client.user.tag})
               ],});
               DisableMonthlyRemind = `UPDATE users SET monthlyremind="false"`
