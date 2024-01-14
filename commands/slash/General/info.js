@@ -8,7 +8,7 @@ module.exports = {
     type: 1, // Command type
     options: [
         {
-            name: "user",
+            name: "utilisateur",
             description: "Utilisateur à vérifier",
             type: 6,
             required: true
@@ -18,7 +18,9 @@ module.exports = {
         DEFAULT_MEMBER_PERMISSIONS: "SendMessages"
     },
     run: async (client, interaction, config, db) => {
-        verifsico = `SELECT * FROM users WHERE id = ${userID}`
+        var userr = interaction.options.get('utilisateur') 
+        var user = userr.user.id
+        verifsico = `SELECT * FROM users WHERE id ="${user}"`
         connection.query(gettimef(), function(error, results, fields) {
             if(results.length == 0){
                 interaction.reply({
