@@ -1,4 +1,4 @@
-/* const { EmbedBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require("discord.js");
+const { EmbedBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require("discord.js");
 
 module.exports = {
     name: "mymodal",
@@ -25,4 +25,3 @@ module.exports = {
         await interaction.showModal(modal);
     },
 };
-*/

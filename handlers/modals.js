@@ -7,7 +7,7 @@ module.exports = (client, config) => {
     const modals = fs.readdirSync(`./modals/`).filter(file => file.endsWith('.js'));
 
     for (let file of modals) {
-
+        if(!file.endsWith('.js') || file.startsWith(".")) return;
         let pull = require(`../modals/${file}`);
         if (pull.id) {
             client.modals.set(pull.id, pull);

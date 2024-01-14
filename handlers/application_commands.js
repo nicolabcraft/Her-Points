@@ -14,12 +14,12 @@ module.exports = (client, config) => {
     const SlashCommands = fs.readdirSync(`./commands/slash/${dir}`).filter((file) => file.endsWith('.js'));
 
     for (let file of SlashCommands) {
+      if(!file.endsWith('.js') || file.startsWith(".")) return;
       let pull = require(`../commands/slash/${dir}/${file}`);
 
       if (pull.name, pull.description, pull.type == 1) {
         client.slash_commands.set(pull.name, pull);
-        console.log(`[HANDLER - SLASH] Loaded a file: ${pull.name} (#${client.slash_commands.size})`.brightGreen);
-
+        console.log(`[HANDLER - SLASH] Fichier chargé: ${pull.name} (#${client.slash_commands.size})`.brightGreen);
         commands.push({
           name: pull.name,
           description: pull.description,
@@ -42,12 +42,12 @@ module.exports = (client, config) => {
     const UserCommands = fs.readdirSync(`./commands/user/${dir}`).filter((file) => file.endsWith('.js'));
 
     for (let file of UserCommands) {
+      if(!file.endsWith('.js') || file.startsWith(".")) return;
       let pull = require(`../commands/user/${dir}/${file}`);
 
       if (pull.name, pull.type == 2) {
         client.user_commands.set(pull.name, pull);
-        console.log(`[HANDLER - USER] Loaded a file: ${pull.name} (#${client.user_commands.size})`.brightGreen);
-
+        console.log(`[HANDLER - USER] Fichier chargé: ${pull.name} (#${client.user_commands.size})`.brightGreen);
         commands.push({
           name: pull.name,
           type: pull.type || 2,
@@ -66,6 +66,7 @@ module.exports = (client, config) => {
     const UserCommands = fs.readdirSync(`./commands/message/${dir}`).filter((file) => file.endsWith('.js'));
 
     for (let file of UserCommands) {
+      if(!file.endsWith('.js') || file.startsWith(".")) return;
       let pull = require(`../commands/message/${dir}/${file}`);
 
       if (pull.name, pull.type == 3) {
