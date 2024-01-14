@@ -166,3 +166,12 @@ function SendRemind(userID){
     }
   }
 }
+
+// on quit 
+process.on('SIGINT', async function() {
+  console.log("Caught interrupt signal");
+  await client.destroy();
+  connection.end();
+  console.log("[INFO] Bot déconnecté à " + new Date().toISOString());
+  process.exit();
+});
