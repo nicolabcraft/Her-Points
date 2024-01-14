@@ -1,5 +1,5 @@
 const { EmbedBuilder, Collection, ActionRowBuilder, ButtonBuilder, ButtonStyle, Events, PermissionsBitField } = require("discord.js");
-
+const mysql = require('mysql');
 module.exports = {
     name: "info", // Name of command
     description: "Vérifier les informations d'un utilisateur", // Command description
@@ -16,6 +16,7 @@ module.exports = {
         DEFAULT_MEMBER_PERMISSIONS: "SendMessages"
     },
     run: async (client, interaction, config, db) => {
+        var connection = mysql.createConnection(config.Bdd);
         var aa = `SELECT * FROM users WHERE id="${interaction.user.id}"`
         connection.query(aa, function (err, rows, fields) {
             var bb = `SELECT * FROM tblclients WHERE email='${rows[0].email}'`

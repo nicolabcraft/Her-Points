@@ -27,6 +27,7 @@ module.exports = {
                 interaction.reply({ embeds: [embeddrop], components: [], ephemeral: true, });
                 setTimeout(() => {
                     console.log(`[INFO] Bot redémarré avec succès ! Date: ${new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')}`)
+                    process.exit();
                 }, 500);
             }
     },
