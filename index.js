@@ -154,7 +154,7 @@ function SendRemind(userID) {
     config.Type;
 
   if (config.Type == "1") {
-    VerifSiCo = `SELECT * FROM users WHERE id = ${userID}  LIMIT = 1`;
+    VerifSiCo = `SELECT * FROM users WHERE id = ${userID} LIMIT 1`;
     connection.query(VerifSiCo, function (error, results, fields) {
       if (results.length == 0) {
         return;

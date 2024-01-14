@@ -171,7 +171,7 @@ module.exports = {
       config.Type;
     var connection = mysql.createConnection(config.Bdd);
     const [results] = await client.db.execute(
-      `${client.dbTables.usersSelect} WHERE \`id\` = ? LIMIT = 1`,
+      `${client.dbTables.usersSelect} WHERE \`id\` = ? LIMIT 1`,
       [interaction.user.id]
     );
 
@@ -195,7 +195,7 @@ module.exports = {
       var Now = datee.substr(0, length - 3);
       //var Now = Date.now()
       if (endroit == "discord") {
-        var getcredits = `${client.dbTables.usersSelect} WHERE id='${interaction.user.id}'  LIMIT = 1`;
+        var getcredits = `${client.dbTables.usersSelect} WHERE id='${interaction.user.id}'  LIMIT 1`;
         connection.query(getcredits, function (error, results, fields) {
           var creditsActuels = results[0].balance;
           var Newcredits = math.chain(creditsActuels).add(nombre);
@@ -308,7 +308,7 @@ module.exports = {
         .then((res) => res.json())
         .then((json) => {
           client.db
-            .execute(`${client.dbTables.usersSelect} WHERE \`id\` = ?  LIMIT = 1`, [
+            .execute(`${client.dbTables.usersSelect} WHERE \`id\` = ?  LIMIT 1`, [
               interaction.user.id,
             ])
             .then(function ([results]) {
@@ -344,7 +344,7 @@ module.exports = {
                     ephemeral: false,
                   });
                 } else {
-                  let gettransf = `${client.dbTables.usersSelect} WHERE id=${interaction.user.id}  LIMIT = 1`;
+                  let gettransf = `${client.dbTables.usersSelect} WHERE id=${interaction.user.id}  LIMIT 1`;
                   client.db.execute(gettransf).then(function ([results]) {
                     givecredits(
                       (results[0].autotransfert = "off")
@@ -457,7 +457,7 @@ module.exports = {
         var nbchoisis = entierAleatoire(1, 100);
 
         function win() {
-          let gettime = `${client.dbTables.usersSelect} WHERE id=${interaction.user.id}  LIMIT = 1`;
+          let gettime = `${client.dbTables.usersSelect} WHERE id=${interaction.user.id}  LIMIT 1`;
 
           client.db
             .execute(gettime)
@@ -509,7 +509,7 @@ module.exports = {
     }
 
     if (interaction.options._subcommand == "transfert") {
-        var Verifsiilestconnecté = `${client.dbTables.usersSelect} WHERE id="${interaction.user.id}" LIMIT = 1`;
+        var Verifsiilestconnecté = `${client.dbTables.usersSelect} WHERE id="${interaction.user.id}" LIMIT 1`;
         client.db.execute(Verifsiilestconnecté).then(function ([results]) {
           var résultats = results.length;
 
@@ -524,11 +524,11 @@ module.exports = {
               components: [],
             });
           } else {
-            var GetOlbBal = `${client.dbTables.usersSelect} WHERE id="${interaction.user.id}"  LIMIT = 1`;
+            var GetOlbBal = `${client.dbTables.usersSelect} WHERE id="${interaction.user.id}"  LIMIT 1`;
             client.db
               .execute(GetOlbBal)
               .then(function ([results]) {
-                var GetBal = `${client.dbTables.clientSelect} WHERE email="${row[0].email}"  LIMIT = 1`;
+                var GetBal = `${client.dbTables.clientSelect} WHERE email="${row[0].email}"  LIMIT 1`;
 
                 client.db.execute(GetBal).then(function ([rows]) {
                   var balmanager =
@@ -577,9 +577,9 @@ module.exports = {
     }
 
     if (interaction.options._subcommand == "solde") {
-      var aa = `${client.dbTables.usersSelect} WHERE id="${interaction.user.id}" LIMIT = 1`;
+      var aa = `${client.dbTables.usersSelect} WHERE id="${interaction.user.id}" LIMIT 1`;
       client.db.execute(aa).then(function ([rows]) {
-        var bb = `${clientSelect} WHERE email='${rows[0].email}'  LIMIT = 1`;
+        var bb = `${clientSelect} WHERE email='${rows[0].email}'  LIMIT 1`;
         client.db.execute(bb).then(function ([rowsss]) {
           return interaction.reply({
             content: `<@${interaction.user.id}>`,
@@ -617,7 +617,7 @@ module.exports = {
       var userr = interaction.options.get("utilisateur");
       var user = userr.user.id;
       const userId = interaction.options.get("utilisateur").value;
-      var GetActualMoney = `${client.dbTables.usersSelect} WHERE id="${userId}"  LIMIT = 1`;
+      var GetActualMoney = `${client.dbTables.usersSelect} WHERE id="${userId}"  LIMIT 1`;
       const rowsss = await client.db.execute(GetActualMoney);
       if ((rowsss.length = 0)) {
         return interaction.reply({
