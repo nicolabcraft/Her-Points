@@ -736,8 +736,8 @@ module.exports = {
               var moneytoadd = interaction.options.get("nombre").value;
               var userr = interaction.options.get("utilisateur");
               var user = userr.user.id;
-              if (config.Type == "1") {
-                var GetActualMoney = `SELECT * FROM users WHERE id="${user}"`;
+                const userId = interaction.options.get("utilisateur").value;
+                var GetActualMoney = `SELECT * FROM ${config.Type == "1" ? "users" : botusers} WHERE id="${userId}"`;
                 client.db.execute(GetActualMoney).then(function ([rowsss]) {
                   if (rowsss.length == "0") {
                     return interaction.reply({
@@ -752,7 +752,7 @@ module.exports = {
                   }
                   var actualMoney = rowsss[0].balance;
                   var NewBalance = math.chain(actualMoney).add(moneytoadd);
-                  var SetNewBalance = `UPDATE users SET balance="${NewBalance}" WHERE id="${user}"`;
+                  var SetNewBalance = `UPDATE ${config.Type == "1" ? "users" : botusers} SET balance="${NewBalance}" WHERE id="${user}"`;
                   client.db.execute(SetNewBalance).then(function ([rows]) {
                     return interaction.reply({
                       content: `<@${interaction.user.id}>`,
@@ -767,38 +767,6 @@ module.exports = {
                     });
                   });
                 });
-              } else {
-                var GetActualMoney = `SELECT * FROM botusers WHERE id="${user}"`;
-                client.db.execute(GetActualMoney).then(function ([rowsss]) {
-                  if (rowsss.length == "0") {
-                    return interaction.reply({
-                      content: `<@${interaction.user.id}>`,
-                      embeds: [
-                        new EmbedBuilder()
-                          .setDescription(`L'utilisateur n'est pas connecté.`)
-                          .setColor("Red"),
-                      ],
-                      ephemeral: true,
-                    });
-                  }
-                  var actualMoney = rowsss[0].balance;
-                  var NewBalance = math.chain(actualMoney).add(moneytoadd);
-                  var SetNewBalance = `UPDATE botusers SET balance="${NewBalance}" WHERE id="${user}"`;
-                  client.db.execute(SetNewBalance).then(function ([rows]) {
-                    return interaction.reply({
-                      content: `<@${interaction.user.id}>`,
-                      embeds: [
-                        new EmbedBuilder()
-                          .setDescription(
-                            `L'utilisateur dispose désormais de ${NewBalance} points.`
-                          )
-                          .setColor("Green"),
-                      ],
-                      ephemeral: true,
-                    });
-                  });
-                });
-              }
             }
           }
           if (interaction.options._subcommand == "retirer") {
@@ -812,8 +780,7 @@ module.exports = {
               var moneytoadd = interaction.options.get("nombre").value;
               var userr = interaction.options.get("utilisateur");
               var user = userr.user.id;
-              if (config.Type == "1") {
-                var GetActualMoney = `SELECT * FROM users WHERE id="${user}"`;
+                var GetActualMoney = `SELECT * FROM ${config.Type == "1" ? "users" : botusers} WHERE id="${user}"`;
                 client.db.execute(GetActualMoney).then(function ([rowsss]) {
                   if (rowsss.length == "0") {
                     return interaction.reply({
@@ -828,7 +795,7 @@ module.exports = {
                   }
                   var actualMoney = rowsss[0].balance;
                   var NewBalance = math.subtract(actualMoney, moneytoadd);
-                  var SetNewBalance = `UPDATE users SET balance="${NewBalance}" WHERE id="${user}"`;
+                  var SetNewBalance = `UPDATE ${config.Type == "1" ? "users" : botusers} SET balance="${NewBalance}" WHERE id="${user}"`;
                   client.db.execute(SetNewBalance).then(function ([rows]) {
                     return interaction.reply({
                       content: `<@${interaction.user.id}>`,
@@ -843,38 +810,6 @@ module.exports = {
                     });
                   });
                 });
-              } else {
-                var GetActualMoney = `SELECT * FROM botusers WHERE id="${user}"`;
-                client.db.execute(GetActualMoney).then(function ([rowsss]) {
-                  if (rowsss.length == "0") {
-                    return interaction.reply({
-                      content: `<@${interaction.user.id}>`,
-                      embeds: [
-                        new EmbedBuilder()
-                          .setDescription(`L'utilisateur n'est pas connecté.`)
-                          .setColor("Red"),
-                      ],
-                      ephemeral: true,
-                    });
-                  }
-                  var actualMoney = rowsss[0].balance;
-                  var NewBalance = math.subtract(actualMoney, moneytoadd);
-                  var SetNewBalance = `UPDATE botusers SET balance="${NewBalance}" WHERE id="${user}"`;
-                  client.db.execute(SetNewBalance).then(function ([rows]) {
-                    return interaction.reply({
-                      content: `<@${interaction.user.id}>`,
-                      embeds: [
-                        new EmbedBuilder()
-                          .setDescription(
-                            `L'utilisateur dispose désormais de ${NewBalance} points.`
-                          )
-                          .setColor("Green"),
-                      ],
-                      ephemeral: true,
-                    });
-                  });
-                });
-              }
             }
           }
         });
@@ -925,12 +860,11 @@ module.exports = {
       var Now = datee.substr(0, length - 3);
       //var Now = Date.now()
       if (endroit == "discord") {
-        if (config.Type == "1") {
-          var getcredits = `SELECT * FROM users WHERE id='${interaction.user.id}'`;
+          var getcredits = `SELECT * FROM ${config.Type == "1" ? "users" : botusers} WHERE id='${interaction.user.id}'`;
           connection.query(getcredits, function (error, results, fields) {
             var creditsActuels = results[0].balance;
             var Newcredits = math.chain(creditsActuels).add(nombre);
-            var setCredits = `UPDATE users SET balance='${Newcredits}',${type}='${Now}', ${secondtable}=${Date.now()} WHERE id='${
+            var setCredits = `UPDATE ${config.Type == "1" ? "users" : botusers} SET balance='${Newcredits}',${type}='${Now}', ${secondtable}=${Date.now()} WHERE id='${
               interaction.user.id
             }'`;
             connection.query(setCredits, function (error, results, fields) {
@@ -950,32 +884,6 @@ module.exports = {
               });
             });
           });
-        } else {
-          var getcredits = `SELECT * FROM botusers WHERE id='${interaction.user.id}'`;
-          connection.query(getcredits, function (error, results, fields) {
-            var creditsActuels = results[0].balance;
-            var Newcredits = math.chain(creditsActuels).add(nombre);
-            var setCredits = `UPDATE botusers SET balance='${Newcredits}',${type}='${Now}', ${secondtable}=${Date.now()} WHERE id='${
-              interaction.user.id
-            }'`;
-            connection.query(setCredits, function (error, results, fields) {
-              if (error) {
-                console.log(error);
-              }
-              return interaction.reply({
-                content: `<@${interaction.user.id}>`,
-                embeds: [
-                  new EmbedBuilder()
-                    .setDescription(
-                      `:white_check_mark: | Vous venez de gagner ${nombre} (discord)`
-                    )
-                    .setColor("Green"),
-                ],
-                ephemeral: false,
-              });
-            });
-          });
-        }
       } else if (endroit == "manager") {
         if (config.Type == "1") {
           var setremind = `UPDATE users SET ${remind}="true" WHERE id='${interaction.user.id}'`;
