@@ -5,6 +5,8 @@ var execSync = require("child_process").execSync;
 
 var check = function (fallback=()=>{}) {
 
+    const branch = execSync("git rev-parse --abbrev-ref HEAD").toString().trim();
+
     // check if git is installed
     try {
         execSync("git --version");
@@ -18,9 +20,11 @@ var check = function (fallback=()=>{}) {
 
     execSync("git fetch");
 
-    const stdout = execSync(`git status --porcelain`).toString().trim();
+    // check if remote commit is different from local commit
+    const stdout = execSync(`git diff --name-only origin/${branch}`).toString().trim();
+    const isDifferent = stdout.length > 0;
 
-    if (stdout.length > 0) {
+    if (isDifferent) {
         console.log("[GIT] App crashed because there is a new version of the bot.");
         process.exit();
     } else {
