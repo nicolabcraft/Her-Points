@@ -80,6 +80,15 @@ module.exports = {
                         }
                     }
                 }
+                function gettimef(){
+                    if(config.Type == "1"){
+                        return "SELECT * FROM users";
+                    }else{
+                        if(config.Type == "2"){
+                            return "SELECT * FROM botusers";
+                        }
+                    }
+                }
 
     },
 };
