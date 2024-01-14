@@ -20,7 +20,7 @@ module.exports = {
     run: async (client, interaction, config, db) => {
         var userr = interaction.options.get('utilisateur') 
         var userid = userr.user.id
-        const user = interaction.options.getUser('user');
+        const user = interaction.options.getUser('utilisateur');
         verifsico = `SELECT * FROM users WHERE id ="${userid}"`
         connection.query(gettimef(), function(error, results, fields) {
             if(results.length == 0){
