@@ -274,3 +274,19 @@ function SendRemind(userID) {
 }
 
 // --- END REMIND ---
+
+// --- DB PREREQUESTS ---
+
+const dbTables = {
+  usersSelect:
+    config.Type == "1"
+      ? "SELECT * FROM users LIMIT 1"
+      : "SELECT * FROM botusers LIMIT 1",
+  usersUpdate: config.Type == "1" ? "UPDATE users" : "UPDATE botusers",
+  clientSelect:
+    config.Type == "1"
+      ? "SELECT * FROM tblclients LIMIT 1"
+      : "SELECT * FROM users LIMIT 1",
+      clientUpdate: config.Type == "1" ? "UPDATE tblclients" : "UPDATE users",
+};
+client.dbTables = dbTables;
