@@ -1,4 +1,5 @@
 const { EmbedBuilder, Collection, ActionRowBuilder, ButtonBuilder, ButtonStyle, Events, PermissionsBitField } = require("discord.js");
+const config = require('../../../config/config.js');
 var connection = mysql.createConnection(config.Bdd);
 const mysql = require('mysql');
 module.exports = {
