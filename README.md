@@ -5,6 +5,7 @@
 Manager Bot is a Discord bot designed to enhance your server management experience. This project was developed by NonozgYtb & Nicolabcraft and draws inspiration from TurboGamer71.
 
 **GitHub Repository:** [Manager Bot GitHub](https://github.com/nicolabcraft/Her-Points)
+**GitHub Inspiration Repository:** [Manager Bot Inspiration](https://github.com/TurboGamer71/Manager/)
 
 ## Getting Started
 
