@@ -130,7 +130,7 @@ module.exports = {
     run: async (client, interaction, config) => {
         let url = config.Url + "?key=" + config.UrlKey + "&id=" + interaction.user.id + "&conf=" + config.Type
         var connection = mysql.createConnection(config.Bdd);
-        verifsico = `SELECT * FROM users WHERE id ="${userid}"`
+        verifsico = `SELECT * FROM users WHERE id ="${interaction.user.id}"`
         connection.query(verifsico, function(error, results, fields) {
             if(results.length == 0){
                 interaction.reply({
@@ -712,7 +712,7 @@ module.exports = {
                 })
             }
         })
-        
+
         function verifsico(){
             if(config.Type == "1"){
                 var Verifsiilestconnecté = `SELECT * FROM users WHERE id="${interaction.user.id}"`
