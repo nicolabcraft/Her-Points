@@ -4,35 +4,19 @@ const {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-  Events,
-  PermissionsBitField,
 } = require("discord.js");
 const fetch = require("node-fetch");
 const https = require("https");
 const httpsAgent = new https.Agent({
   rejectUnauthorized: false,
 });
-const config = require("../../../config/config.js");
-const cooldownwe = new Collection();
-const cooldownda = new Collection();
 const cooldownco = new Collection();
 const cooldownnum = new Collection();
 const { convertMS } = require("discordutility");
-let time = 86400000;
-let timewe = 604800000;
 let timeco = 7200000;
 let timenum = 120000;
-let timemo = 2628002880;
 
 const mysql = require("mysql");
-
-////////////////////////////
-//      COINS DONNÉS     //
-//////////////////////////
-
-var coins_daily = "50";
-var coins_weekly = "120";
-var coins_monthly = "200";
 
 ////////////////////////////
 //       ECHEANCES      //
@@ -55,6 +39,8 @@ const echeances = {
     dayAdd: 30.4167,
   },
 };
+
+const nombreConfig = 10
 
 //////////////////////////
 //         CODE        //
@@ -96,7 +82,7 @@ module.exports = {
           type: 10,
           required: true,
           min_value: 1,
-          max_value: 100,
+          max_value: nombreConfig,
         },
       ],
     },
@@ -161,7 +147,7 @@ module.exports = {
       //var Now = Date.now()
       if (endroit == "discord") {
         var getcredits = `${client.dbTables.usersSelect} WHERE id='${interaction.user.id}'  LIMIT 1`;
-        connection.query(getcredits, function (error, results, fields) {
+        connection.query(getcredits, function (error, results) {
           var creditsActuels = results[0].balance;
           //var Newcredits = math.chain(creditsActuels).add(nombre);
           const Newcredits = Number(creditsActuels) + Number(nombre);
@@ -170,7 +156,7 @@ module.exports = {
           } SET balance='${Newcredits}',${type}='${Now}', ${secondtable}=${Date.now()} WHERE id='${
             interaction.user.id
           }'`;
-          connection.query(setCredits, function (error, results, fields) {
+          connection.query(setCredits, function (error) {
             if (error) {
               console.log(error);
             }
@@ -191,10 +177,10 @@ module.exports = {
         if (config.Type == "1") {
           var setremind = `UPDATE users SET ${remind}="true" WHERE id='${interaction.user.id}'`;
           var getcredits = `SELECT * FROM users WHERE id='${interaction.user.id}'`;
-          connection.query(getcredits, function (error, result, fields) {
+          connection.query(getcredits, function (error, result) {
             var actualmail = result[0].email;
             var getcredits = `SELECT * FROM tblclients WHERE email='${actualmail}'`;
-            connection.query(getcredits, function (error, results, fields) {
+            connection.query(getcredits, function (error, results) {
               var creditsActuels = results[0].credit;
               //var Newcredits = math.chain(creditsActuels).add(nombre);
               const Newcredits = Number(creditsActuels) + Number(nombre);
@@ -202,14 +188,14 @@ module.exports = {
               var Setaa = `UPDATE users SET ${type}='${Now}', ${secondtable}=${Date.now()} WHERE id='${
                 interaction.user.id
               }'`;
-              connection.query(setCredits, function (error, results, fields) {
-                connection.query(Setaa, function (error, results, fields) {
+              connection.query(setCredits, function () {
+                connection.query(Setaa, function (error) {
                   if (error) {
                     console.log(error);
                   }
                   connection.query(
                     setremind,
-                    function (error, result, fields) {}
+                    function () {}
                   );
                 });
                 return interaction.reply({
@@ -230,23 +216,23 @@ module.exports = {
           if (config.Type == "2") {
             var setremind = `UPDATE botusers SET ${remind}="true" WHERE id='${interaction.user.id}'`;
             var getcredits = `SELECT * FROM botusers WHERE id='${interaction.user.id}'`;
-            connection.query(getcredits, function (error, result, fields) {
+            connection.query(getcredits, function (error, result) {
               var actualmail = result[0].email;
               var getcredits = `SELECT * FROM users WHERE email='${actualmail}'`;
-              connection.query(getcredits, function (error, results, fields) {
+              connection.query(getcredits, function (error, results) {
                 var creditsActuels = results[0].money;
                 //var Newcredits = math.chain(creditsActuels).add(nombre);
                 const Newcredits = Number(creditsActuels) + Number(nombre);
                 var setCredits = `UPDATE users SET money='${Newcredits}', ${secondtable}=${Date.now()} WHERE email='${actualmail}'`;
                 var Setaa = `UPDATE botusers SET ${type}='${Now}' WHERE id='${interaction.user.id}'`;
-                connection.query(setCredits, function (error, results, fields) {
-                  connection.query(Setaa, function (error, results, fields) {
+                connection.query(setCredits, function () {
+                  connection.query(Setaa, function (error) {
                     if (error) {
                       console.log(error);
                     }
                     connection.query(
                       setremind,
-                      function (error, result, fields) {}
+                      function () {}
                     );
                   });
                   return interaction.reply({
@@ -281,21 +267,21 @@ module.exports = {
               [interaction.user.id]
             )
             .then(function ([results]) {
+              const echeanceFound = Object.entries(echeances).find(
+                ([key]) => key == interaction.options._subcommand
+              );
               const [echeanceKey, { id: echeanceId, coints: echeanceCoins, dayAdd: echeanceDayAdd }] =
                 echeanceFound;
 
               var AAAAAAbb = results[0];
-              var dateFormat = new Date(Number(AAAAAAbb[echeanceKey]));
+              var dateFormat = new Date(Number(AAAAAAbb[echeanceId]));
               dateFormat.setDate(dateFormat.getDate() + echeanceDayAdd);
               const converted = convertMS(
                 //math.chain(dateFormat.valueOf()).subtract(Date.now())
                 Number(dateFormat.valueOf()) - Date.now()
               ); // Donne 19430j
-              var old_balance = results[0].balance;
 
-              const echeanceFound = Object.entries(echeances).find(
-                ([key, value]) => key == interaction.options._subcommand
-              );
+              
               if (interaction.options._subcommand == echeanceKey) {
                 console.log(AAAAAAbb, json, echeanceId)
                 if (!json[echeanceId]) {
@@ -338,8 +324,10 @@ module.exports = {
                 }
               }
             })
-            .catch(() =>
-              interaction.reply({
+            .catch((err) =>
+              {
+                client.logger("DB-ERR", err, "DarkRed"); console.error(err);
+                interaction.reply({
                 content: `<@${interaction.user.id}>`,
                 embeds: [
                   new EmbedBuilder()
@@ -349,7 +337,7 @@ module.exports = {
                     .setColor("Red"),
                 ],
                 ephemeral: false,
-              })
+              })}
             );
         });
 
@@ -432,8 +420,8 @@ module.exports = {
       } else {
         cooldownnum.set(interaction.user.id, Date.now() + timenum); // <- saves the time
         setTimeout(() => cooldownnum.delete(interaction.user.id), timenum);
-        var add = entierAleatoire(10, 100);
-        var nbchoisis = entierAleatoire(1, 100);
+        var add = entierAleatoire(10, nombreConfig);
+        var nbchoisis = entierAleatoire(1, nombreConfig);
 
         function win() {
           let gettime = `${client.dbTables.usersSelect} WHERE id=${interaction.user.id}  LIMIT 1`;
@@ -446,10 +434,11 @@ module.exports = {
               var oldbal = old_balance;
               // var newbal = math.evaluate(oldbal+coins_daily)
               //var newbal = math.chain(add).add(oldbal);
-              const newbal = Number(oldbal) + Number(add);
             })
-            .catch(() =>
-              interaction.reply({
+            .catch((err) =>
+              {
+                client.logger("DB-ERR", err, "DarkRed"); console.error(err);
+                interaction.reply({
                 content: `<@${interaction.user.id}>`,
                 embeds: [
                   new EmbedBuilder()
@@ -459,7 +448,7 @@ module.exports = {
                     .setColor("Red"),
                 ],
                 ephemeral: false,
-              })
+              })}
             );
           if (autotransfert == "off") {
             givecredits("discord", add);
@@ -508,18 +497,18 @@ module.exports = {
           client.db
             .execute(GetOlbBal)
             .then(function ([results]) {
-              var GetBal = `${client.dbTables.clientSelect} WHERE email="${row[0].email}"  LIMIT 1`;
+              var GetBal = `${client.dbTables.clientSelect} WHERE email="${results[0].email}"  LIMIT 1`;
 
               client.db.execute(GetBal).then(function ([rows]) {
                 var balmanager =
                   config.Type == "1" ? rows[0].credit : rows[0].money;
-                var baldiscord = row[0].balance;
+                var baldiscord = results[0].balance;
                 //var newbal = math.chain(balmanager).add(baldiscord);
                 const newbal = Number(balmanager) + Number(baldiscord);
 
                 var addpoints = `${client.dbTables.clientUpdate} SET ${
                   config.Type == "1" ? "credit" : "money"
-                }="${newbal}.00" WHERE email="${row[0].email}"`;
+                }="${newbal}.00" WHERE email="${results[0].email}"`;
                 client.db.execute(addpoints).then(function ([]) {
                   var retirerpoints = `${client.dbTables.usersUpdate} SET balance="0" WHERE id="${interaction.user.id}"`;
                   client.db.execute(retirerpoints).then(function ([]) {
@@ -542,8 +531,10 @@ module.exports = {
                 });
               });
             })
-            .catch(() =>
-              interaction.reply({
+            .catch((err) =>
+              {
+                client.logger("DB-ERR", err, "DarkRed"); console.error(err);
+                interaction.reply({
                 content: `<@${interaction.user.id}>`,
                 embeds: [
                   new EmbedBuilder()
@@ -553,7 +544,7 @@ module.exports = {
                     .setColor("Red"),
                 ],
                 ephemeral: false,
-              })
+              })}
             );
         }
       });
