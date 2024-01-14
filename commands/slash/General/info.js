@@ -15,9 +15,16 @@ module.exports = {
         }
     ], // Command options
     permissions: {
-        DEFAULT_MEMBER_PERMISSIONS: "SendMessages"
+        DEFAULT_MEMBER_PERMISSIONS: "Administrator"
     },
     run: async (client, interaction, config, db) => {
+        if (
+            !interaction.member.permissions.has(
+              PermissionsBitField.Flags.Administrator
+            )
+          ) {
+            return;
+          }
         var userr = interaction.options.get('utilisateur') 
         var userid = userr.user.id
         const user = interaction.options.getUser('utilisateur');

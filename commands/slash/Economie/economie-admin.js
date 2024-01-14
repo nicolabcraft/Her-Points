@@ -114,6 +114,14 @@ module.exports = {
    * @param {any} config
    */
   run: async (client, interaction, config) => {
+    if (
+      !interaction.member.permissions.has(
+        PermissionsBitField.Flags.Administrator
+      )
+    ) {
+      return;
+    }
+
     const addRemove = {
       ajouter: 1,
       retirer: -1,
