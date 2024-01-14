@@ -21,13 +21,16 @@ module.exports = {
                     const embeddrop = new EmbedBuilder()
                     .setTitle(`Reload`)
                     .setDescription(
-                        `Le bot a été redémarré avec succès.                        
+                        `Le bot a été redémarré avec succès (PID: ${process.pid}).                        
                          Date:  ${new Date().toLocaleString('fr-FR', { timeZone: 'Europe/Paris' })}`
                     )
                 interaction.reply({ embeds: [embeddrop], components: [], ephemeral: true, });
                 setTimeout(() => {
                     console.log(`[INFO] Bot redémarré avec succès ! Date: ${new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')}`)
-                    process.exit();
+                    // give a SIGINT signal to the process
+                    //process.kill(process.pid, 'SIGINT');
+                    client.reloadState = true;
+                    client.killBot();
                 }, 500);
             }
     },

@@ -107,48 +107,6 @@ module.exports = {
       description: "Savoir combien de points vous avez sur vos comptes",
       type: 1,
     },
-    {
-      name: "ajouter",
-      description: "Ajouter des points",
-      type: 1,
-      options: [
-        {
-          name: "utilisateur",
-          description: "Cible",
-          type: 6,
-          required: true,
-          min_value: 1,
-        },
-        {
-          name: "nombre",
-          description: "Nombre choisit",
-          type: 10,
-          required: true,
-          min_value: 1,
-        },
-      ],
-    },
-    {
-      name: "retirer",
-      description: "Retirer des points",
-      type: 1,
-      options: [
-        {
-          name: "utilisateur",
-          description: "Cible",
-          type: 6,
-          required: true,
-          min_value: 1,
-        },
-        {
-          name: "nombre",
-          description: "Nombre choisit",
-          type: 10,
-          required: true,
-          min_value: 1,
-        },
-      ],
-    },
   ],
   permissions: {
     DEFAULT_MEMBER_PERMISSIONS: "SendMessages",
@@ -168,21 +126,27 @@ module.exports = {
       "&conf=" +
       config.Type;
     var connection = mysql.createConnection(config.Bdd);
-    const [results] = await client.db.execute(
-      `${client.dbTables.usersSelect} WHERE \`id\` = ? LIMIT 1`,
-      [interaction.user.id]
-    );
 
-    if (results.length == 0)
-      return interaction.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(":x: | Vous n'êtes pas connecté!")
-            .setColor("Red"),
-        ],
-        ephemeral: false,
-        components: [],
-      });
+    if (
+      interaction.options._subcommand !== "ajouter" &&
+      interaction.options._subcommand !== "retirer"
+    ) {
+      const [results] = await client.db.execute(
+        `${client.dbTables.usersSelect} WHERE \`id\` = ? LIMIT 1`,
+        [interaction.user.id]
+      );
+
+      if (results.length == 0)
+        return interaction.reply({
+          embeds: [
+            new EmbedBuilder()
+              .setDescription(":x: | Vous n'êtes pas connecté!")
+              .setColor("Red"),
+          ],
+          ephemeral: false,
+          components: [],
+        });
+    }
 
     let settings = { method: "Get", agent: httpsAgent };
 
@@ -309,9 +273,10 @@ module.exports = {
         .then((res) => res.json())
         .then((json) => {
           client.db
-            .execute(`${client.dbTables.usersSelect} WHERE \`id\` = ?  LIMIT 1`, [
-              interaction.user.id,
-            ])
+            .execute(
+              `${client.dbTables.usersSelect} WHERE \`id\` = ?  LIMIT 1`,
+              [interaction.user.id]
+            )
             .then(function ([results]) {
               var AAAAAAbb = results[0];
               var dateFormat = new Date(Number(AAAAAAbb.daily));
@@ -512,72 +477,74 @@ module.exports = {
     }
 
     if (interaction.options._subcommand == "transfert") {
-        var Verifsiilestconnecté = `${client.dbTables.usersSelect} WHERE id="${interaction.user.id}" LIMIT 1`;
-        client.db.execute(Verifsiilestconnecté).then(function ([results]) {
-          var résultats = results.length;
+      var Verifsiilestconnecté = `${client.dbTables.usersSelect} WHERE id="${interaction.user.id}" LIMIT 1`;
+      client.db.execute(Verifsiilestconnecté).then(function ([results]) {
+        var résultats = results.length;
 
-          if (résultats == 0) {
-            return interaction.reply({
-              embeds: [
-                new EmbedBuilder()
-                  .setDescription(":x: | Vous n'êtes pas connecté!")
-                  .setColor("Red"),
-              ],
-              ephemeral: false,
-              components: [],
-            });
-          } else {
-            var GetOlbBal = `${client.dbTables.usersSelect} WHERE id="${interaction.user.id}"  LIMIT 1`;
-            client.db
-              .execute(GetOlbBal)
-              .then(function ([results]) {
-                var GetBal = `${client.dbTables.clientSelect} WHERE email="${row[0].email}"  LIMIT 1`;
+        if (résultats == 0) {
+          return interaction.reply({
+            embeds: [
+              new EmbedBuilder()
+                .setDescription(":x: | Vous n'êtes pas connecté!")
+                .setColor("Red"),
+            ],
+            ephemeral: false,
+            components: [],
+          });
+        } else {
+          var GetOlbBal = `${client.dbTables.usersSelect} WHERE id="${interaction.user.id}"  LIMIT 1`;
+          client.db
+            .execute(GetOlbBal)
+            .then(function ([results]) {
+              var GetBal = `${client.dbTables.clientSelect} WHERE email="${row[0].email}"  LIMIT 1`;
 
-                client.db.execute(GetBal).then(function ([rows]) {
-                  var balmanager =
-                    config.Type == "1" ? rows[0].credit : rows[0].money;
-                  var baldiscord = row[0].balance;
-                  //var newbal = math.chain(balmanager).add(baldiscord);
-                  const newbal = Number(balmanager) + Number(baldiscord);
+              client.db.execute(GetBal).then(function ([rows]) {
+                var balmanager =
+                  config.Type == "1" ? rows[0].credit : rows[0].money;
+                var baldiscord = row[0].balance;
+                //var newbal = math.chain(balmanager).add(baldiscord);
+                const newbal = Number(balmanager) + Number(baldiscord);
 
-                  var addpoints = `${client.dbTables.clientUpdate} SET ${config.Type == "1" ? "credit" : "money"}="${newbal}.00" WHERE email="${row[0].email}"`;
-                  client.db.execute(addpoints).then(function ([]) {
-                    var retirerpoints = `${client.dbTables.usersUpdate} SET balance="0" WHERE id="${interaction.user.id}"`;
-                    client.db.execute(retirerpoints).then(function ([]) {
-                      return interaction.reply({
-                        content: `<@${interaction.user.id}>`,
-                        embeds: [
-                          new EmbedBuilder()
-                            .setDescription(
-                              "Vous avez transféré " +
-                                baldiscord +
-                                " points sur le manager!\nVous disposez maintenant de " +
-                                newbal +
-                                " points!"
-                            )
-                            .setColor("Green"),
-                        ],
-                        ephemeral: false,
-                      });
+                var addpoints = `${client.dbTables.clientUpdate} SET ${
+                  config.Type == "1" ? "credit" : "money"
+                }="${newbal}.00" WHERE email="${row[0].email}"`;
+                client.db.execute(addpoints).then(function ([]) {
+                  var retirerpoints = `${client.dbTables.usersUpdate} SET balance="0" WHERE id="${interaction.user.id}"`;
+                  client.db.execute(retirerpoints).then(function ([]) {
+                    return interaction.reply({
+                      content: `<@${interaction.user.id}>`,
+                      embeds: [
+                        new EmbedBuilder()
+                          .setDescription(
+                            "Vous avez transféré " +
+                              baldiscord +
+                              " points sur le manager!\nVous disposez maintenant de " +
+                              newbal +
+                              " points!"
+                          )
+                          .setColor("Green"),
+                      ],
+                      ephemeral: false,
                     });
                   });
                 });
+              });
+            })
+            .catch(() =>
+              interaction.reply({
+                content: `<@${interaction.user.id}>`,
+                embeds: [
+                  new EmbedBuilder()
+                    .setDescription(
+                      `:x: | Une erreur à été rencontrée lors de la connexion avec la base de données.`
+                    )
+                    .setColor("Red"),
+                ],
+                ephemeral: false,
               })
-              .catch(() =>
-                interaction.reply({
-                  content: `<@${interaction.user.id}>`,
-                  embeds: [
-                    new EmbedBuilder()
-                      .setDescription(
-                        `:x: | Une erreur à été rencontrée lors de la connexion avec la base de données.`
-                      )
-                      .setColor("Red"),
-                  ],
-                  ephemeral: false,
-                })
-              );
-          }
-        });
+            );
+        }
+      });
     }
 
     if (interaction.options._subcommand == "solde") {
@@ -600,54 +567,6 @@ module.exports = {
             ],
             ephemeral: false,
           });
-        });
-      });
-    }
-
-    const addRemove = {
-      ajouter: -1,
-      retirer: 1,
-    };
-    if (Object.keys(addRemove).includes(interaction.options._subcommand)) {
-      const minus = addRemove[interaction.options._subcommand];
-      if (
-        !interaction.member.permissions.has(
-          PermissionsBitField.Flags.Administrator
-        )
-      ) {
-        return;
-      }
-      var moneytoadd = interaction.options.get("nombre").value;
-      const userr = interaction.options.get("utilisateur");
-      const user = userr.user.id;
-      const userId = userr.user.id || userr.value;
-      var GetActualMoney = `${client.dbTables.usersSelect} WHERE id = ?  LIMIT 1`;
-      const rowsss = await client.db.execute(GetActualMoney, [userId]);
-      if ((rowsss.length == 0)) {
-        return interaction.reply({
-          content: `<@${interaction.user.id}>`,
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(`L'utilisateur n'est pas connecté.`)
-              .setColor("Red"),
-          ],
-          ephemeral: true,
-        });
-      }
-      var actualMoney = rowsss[0].balance;
-      var NewBalance = Number(actualMoney) + Number(moneytoadd) * minus;
-      var SetNewBalance = `${client.dbTables.usersUpdate} SET balance=? WHERE id=?`;
-      client.db.execute(SetNewBalance, [NewBalance,user]).then(function ([rows]) {
-        return interaction.reply({
-          content: `<@${interaction.user.id}>`,
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(
-                `L'utilisateur dispose désormais de ${NewBalance} points.`
-              )
-              .setColor("Green"),
-          ],
-          ephemeral: true,
         });
       });
     }

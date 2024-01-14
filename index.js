@@ -116,22 +116,65 @@ client.login(AuthenticationToken).catch((err) => {
   return process.exit();
 });
 
+// --- LOG ---
+
+const logger = (title, message = undefined, color = undefined) => {
+  console.log(
+    `[LOG - ${title.toUpperCase()} - ${new Date().toISOString()}] : ${message}`
+  );
+  return client.channels.fetch(config.Logger.channel).then((channel) => {
+    let embed = new EmbedBuilder()
+      .setTitle(title.toUpperCase())
+      .setFooter({
+        text: `Envoyé automatiquement | ${new Date().toISOString()}`,
+      })
+      .setColor(color || "Default");
+
+    if (message) {
+      embed.setDescription(message.toString().trim());
+    }
+
+    return channel.send({
+      embeds: [embed],
+    });
+  });
+};
+
+client.logger = logger;
+
+// --- END LOG ---
+
 // --- PROCESS ---
+
+// On quit
+const killBot = async function () {
+  client.killBotState = true;
+  connection.end(()=>{
+    console.log("[INFO] DB-RELIC déconnecté à " + new Date().toISOString());
+  });
+  if(client.reloadState == true) 
+    await client.logger("Bot déconnecté", "Il a été rechargé par la commande reload", "Orange");
+  else
+    await client.logger("Bot déconnecté", "Il a été déconnecté par la commande kill/autre", "Red");
+  console.log("[INFO] Bot déconnecté à " + new Date().toISOString());
+  await client.db.end();
+  console.log("[INFO] DB déconnecté à " + new Date().toISOString());
+  await client.destroy();
+  console.log("[INFO] Client détruit à " + new Date().toISOString());
+  process.exit();
+}
+process.on("SIGINT", killBot);
+client.killBotState = false;
+client.reloadState = false
+client.killBot = killBot;
 
 // Handle errors
 process.on("unhandledRejection", async (err, promise) => {
+  if(client.killBotState == true) return;
+  if (err.toString().includes("Received one or more errors")) return;
   console.error(`[ANTI-CRASH]: ${err}`.red);
   console.error(promise);
-});
-
-// On quit
-process.on("SIGINT", async function () {
-  console.log("Caught interrupt signal");
-  await client.destroy();
-  connection.end();
-  client.db.end();
-  console.log("[INFO] Bot déconnecté à " + new Date().toISOString());
-  process.exit();
+  client.logger("Anti-Crash", err, "Red");
 });
 
 // --- END PROCESS ---
@@ -279,38 +322,12 @@ function SendRemind(userID) {
 
 const dbTables = {
   usersSelect:
-    config.Type == "1"
-      ? "SELECT * FROM `users`"
-      : "SELECT * FROM `botusers`",
+    config.Type == "1" ? "SELECT * FROM `users`" : "SELECT * FROM `botusers`",
   usersUpdate: config.Type == "1" ? "UPDATE `users`" : "UPDATE `botusers`",
   clientSelect:
-    config.Type == "1"
-      ? "SELECT * FROM `tblclients`"
-      : "SELECT * FROM `users`",
-      clientUpdate: config.Type == "1" ? "UPDATE `tblclients`" : "UPDATE `users`",
+    config.Type == "1" ? "SELECT * FROM `tblclients`" : "SELECT * FROM `users`",
+  clientUpdate: config.Type == "1" ? "UPDATE `tblclients`" : "UPDATE `users`",
 };
 client.dbTables = dbTables;
 
 // --- END DB PREREQUESTS ---
-
-// --- LOG ---
-
-const logger = (title, message, color) =>  {
-  console.log(`[LOG] : ${title.toUpperCase()}] --- ${message}`);
-  client.channels.fetch(config.Logger.channel).then(channel => {
-    channel.send({
-      embeds: [
-        new EmbedBuilder()
-          .setTitle(title.toUpperCase())
-          .setDescription(message)
-          .setFooter({
-            text: `Envoyé automatiquement ${client.user.tag} | ${new Date().toISOString()}`,
-          }),
-      ],
-    });
-  })
-}
-
-client.logger = logger;
-
-// --- END LOG ---
