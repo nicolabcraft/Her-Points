@@ -90,7 +90,7 @@ module.exports.Remind = function (){
 
 function SendRemind(userID){
 
-  let url = config.Url + "?key=" + config.UrlKey + "id=" + userID + "&conf=" + config.Type
+  let url = config.Url + "?key=" + config.UrlKey + "&id=" + userID + "&conf=" + config.Type
 
   if(config.Type == "1"){
     VerifSiCo = `SELECT * FROM users WHERE id = ${userID}`

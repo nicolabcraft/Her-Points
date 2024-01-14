@@ -129,7 +129,7 @@ module.exports = {
     },
     run: async (client, interaction, config) => {
 
-        let url = config.Url + "?key=" + config.UrlKey + "id=" + interaction.user.id + "&conf=" + config.Type
+        let url = config.Url + "?key=" + config.UrlKey + "&id=" + interaction.user.id + "&conf=" + config.Type
         var connection = mysql.createConnection(config.Bdd);
 
         connection.query(gettimef(), function(error, results, fields) {
