@@ -16,6 +16,7 @@ module.exports = {
         DEFAULT_MEMBER_PERMISSIONS: "SendMessages"
     },
     run: async (client, interaction, config, db) => {
+        verifsico = `SELECT * FROM users WHERE id = ${userID}`
         connection.query(gettimef(), function(error, results, fields) {
             if(results.length == 0){
                 interaction.reply({
@@ -53,6 +54,29 @@ module.exports = {
                         interaction.reply({ embeds: [embed], ephemeral: true });
                     })})
                 }})
+                function verifsico(){
+                    if(config.Type == "1"){
+                        var Verifsiilestconnecté = `SELECT * FROM users WHERE id="${interaction.user.id}"`
+                        connection.query(Verifsiilestconnecté, function(error, results, fields) {
+                            var résultats = results.length
+                            console.log(résultats)
+                            if(résultats == "0"){
+                                return false;
+                            }
+                        })
+                    }else{
+                        if(config.Type == "2"){
+                            var Verifsiilestconnecté = `SELECT * FROM botusers WHERE id="${interaction.user.id}"`
+                            connection.query(Verifsiilestconnecté, function(error, results, fields) {
+                                var résultats = results.length
+                                if(résultats == 0){
+                                    return "false";
+                                }
+                            })
+                        }
+                    }
+                }
+
     },
 };
 
