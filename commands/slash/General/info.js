@@ -55,7 +55,7 @@ module.exports = {
                                 {name:"Email", value: rows[0].email, inline: true}
                             )
                             .setThumbnail(user.displayAvatarURL({ dynamic: true }))
-                        interaction.reply({ embeds: [embed], ephemeral: true });
+                        interaction.reply({ embeds: [embed], ephemeral: false });
                     })})
                 }})
                 function verifsico(){
