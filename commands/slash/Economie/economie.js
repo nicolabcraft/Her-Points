@@ -7,7 +7,6 @@ const {
   Events,
   PermissionsBitField,
 } = require("discord.js");
-const math = require("mathjs");
 const fetch = require("node-fetch");
 const https = require("https");
 const httpsAgent = new https.Agent({
@@ -26,7 +25,6 @@ let timenum = 120000;
 let timemo = 2628002880;
 
 const mysql = require("mysql");
-const { number } = require("mathjs");
 
 ////////////////////////////
 //      COINS DONNÉS     //
@@ -198,7 +196,8 @@ module.exports = {
         var getcredits = `${client.dbTables.usersSelect} WHERE id='${interaction.user.id}'  LIMIT 1`;
         connection.query(getcredits, function (error, results, fields) {
           var creditsActuels = results[0].balance;
-          var Newcredits = math.chain(creditsActuels).add(nombre);
+          //var Newcredits = math.chain(creditsActuels).add(nombre);
+          const Newcredits = Number(creditsActuels) + Number(nombre);
           var setCredits = `${
             client.dbTables.usersUpdate
           } SET balance='${Newcredits}',${type}='${Now}', ${secondtable}=${Date.now()} WHERE id='${
@@ -230,7 +229,8 @@ module.exports = {
             var getcredits = `SELECT * FROM tblclients WHERE email='${actualmail}'`;
             connection.query(getcredits, function (error, results, fields) {
               var creditsActuels = results[0].credit;
-              var Newcredits = math.chain(creditsActuels).add(nombre);
+              //var Newcredits = math.chain(creditsActuels).add(nombre);
+              const Newcredits = Number(creditsActuels) + Number(nombre);
               var setCredits = `UPDATE tblclients SET credit='${Newcredits}' WHERE email='${actualmail}'`;
               var Setaa = `UPDATE users SET ${type}='${Now}', ${secondtable}=${Date.now()} WHERE id='${
                 interaction.user.id
@@ -268,7 +268,8 @@ module.exports = {
               var getcredits = `SELECT * FROM users WHERE email='${actualmail}'`;
               connection.query(getcredits, function (error, results, fields) {
                 var creditsActuels = results[0].money;
-                var Newcredits = math.chain(creditsActuels).add(nombre);
+                //var Newcredits = math.chain(creditsActuels).add(nombre);
+                const Newcredits = Number(creditsActuels) + Number(nombre);
                 var setCredits = `UPDATE users SET money='${Newcredits}', ${secondtable}=${Date.now()} WHERE email='${actualmail}'`;
                 var Setaa = `UPDATE botusers SET ${type}='${Now}' WHERE id='${interaction.user.id}'`;
                 connection.query(setCredits, function (error, results, fields) {
@@ -316,7 +317,8 @@ module.exports = {
               var dateFormat = new Date(Number(AAAAAAbb.daily));
               dateFormat.setDate(dateFormat.getDate() + 1);
               const converted = convertMS(
-                math.chain(dateFormat.valueOf()).subtract(Date.now())
+                //math.chain(dateFormat.valueOf()).subtract(Date.now())
+                Number(dateFormat.valueOf()) - Date.now()
               ); // Donne 19430j
               var old_balance = results[0].balance;
 
@@ -466,7 +468,8 @@ module.exports = {
 
               var oldbal = old_balance;
               // var newbal = math.evaluate(oldbal+coins_daily)
-              var newbal = math.chain(add).add(oldbal);
+              //var newbal = math.chain(add).add(oldbal);
+              const newbal = Number(oldbal) + Number(add);
             })
             .catch(() =>
               interaction.reply({
@@ -534,7 +537,8 @@ module.exports = {
                   var balmanager =
                     config.Type == "1" ? rows[0].credit : rows[0].money;
                   var baldiscord = row[0].balance;
-                  var newbal = math.chain(balmanager).add(baldiscord);
+                  //var newbal = math.chain(balmanager).add(baldiscord);
+                  const newbal = Number(balmanager) + Number(baldiscord);
 
                   var addpoints = `${client.dbTables.clientUpdate} SET ${config.Type == "1" ? "credit" : "money"}="${newbal}.00" WHERE email="${row[0].email}"`;
                   client.db.execute(addpoints).then(function ([]) {
@@ -614,12 +618,12 @@ module.exports = {
         return;
       }
       var moneytoadd = interaction.options.get("nombre").value;
-      var userr = interaction.options.get("utilisateur");
-      var user = userr.user.id;
-      const userId = interaction.options.get("utilisateur").value;
-      var GetActualMoney = `${client.dbTables.usersSelect} WHERE id="${userId}"  LIMIT 1`;
-      const rowsss = await client.db.execute(GetActualMoney);
-      if ((rowsss.length = 0)) {
+      const userr = interaction.options.get("utilisateur");
+      const user = userr.user.id;
+      const userId = userr.user.id || userr.value;
+      var GetActualMoney = `${client.dbTables.usersSelect} WHERE id = ?  LIMIT 1`;
+      const rowsss = await client.db.execute(GetActualMoney, [userId]);
+      if ((rowsss.length == 0)) {
         return interaction.reply({
           content: `<@${interaction.user.id}>`,
           embeds: [
@@ -631,10 +635,9 @@ module.exports = {
         });
       }
       var actualMoney = rowsss[0].balance;
-      //var NewBalance = math.chain(actualMoney).add(moneytoadd);
       var NewBalance = Number(actualMoney) + Number(moneytoadd) * minus;
-      var SetNewBalance = `${client.dbTables.usersUpdate} SET balance="${NewBalance}" WHERE id="${user}"`;
-      client.db.execute(SetNewBalance).then(function ([rows]) {
+      var SetNewBalance = `${client.dbTables.usersUpdate} SET balance=? WHERE id=?`;
+      client.db.execute(SetNewBalance, [NewBalance,user]).then(function ([rows]) {
         return interaction.reply({
           content: `<@${interaction.user.id}>`,
           embeds: [

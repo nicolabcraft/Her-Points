@@ -290,3 +290,27 @@ const dbTables = {
       clientUpdate: config.Type == "1" ? "UPDATE `tblclients`" : "UPDATE `users`",
 };
 client.dbTables = dbTables;
+
+// --- END DB PREREQUESTS ---
+
+// --- LOG ---
+
+const logger = (title, message, color) =>  {
+  console.log(`[LOG] : ${title.toUpperCase()}] --- ${message}`);
+  client.channels.fetch(config.Logger.channel).then(channel => {
+    channel.send({
+      embeds: [
+        new EmbedBuilder()
+          .setTitle(title.toUpperCase())
+          .setDescription(message)
+          .setFooter({
+            text: `Envoyé automatiquement ${client.user.tag} | ${new Date().toISOString()}`,
+          }),
+      ],
+    });
+  })
+}
+
+client.logger = logger;
+
+// --- END LOG ---

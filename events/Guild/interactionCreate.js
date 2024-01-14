@@ -2,7 +2,6 @@ const { EmbedBuilder, Collection, ActionRowBuilder, ButtonBuilder, ButtonStyle, 
 const client = require("../../index.js");
 const config = require("../../config/config.js");
 const mysql = require('mysql');
-const math = require('mathjs');
 var db = mysql.createConnection(config.Bdd);
 var connection = mysql.createConnection(config.Bdd);
 
@@ -100,8 +99,9 @@ client.on('interactionCreate', async (interaction) => {
                   var getcredits = `SELECT * FROM users WHERE id='${interaction.user.id}'`
                   connection.query(getcredits, function (error, results, fields) {
                       var creditsActuels = results[0].balance
-                      var Newcredits = math.chain(creditsActuels)
-                                          .add(nombre)
+                      /* var Newcredits = math.chain(creditsActuels)
+                                          .add(nombre) */
+                      var Newcredits = Number(creditsActuels) + Number(nombre)
                           var setCredits = `UPDATE users SET balance='${Newcredits}' WHERE id='${interaction.user.id}'`       
                           connection.query(setCredits, function (error, results, fields) {
                               return interaction.update({
@@ -123,8 +123,9 @@ client.on('interactionCreate', async (interaction) => {
                           var getcredits = `SELECT * FROM tblclients WHERE email='${actualmail}'`
                           connection.query(getcredits, function (error, results, fields) {
                           var creditsActuels = results[0].credit
-                          var Newcredits = math.chain(creditsActuels)
-                                              .add(nombre)
+                          /* var Newcredits = math.chain(creditsActuels)
+                                              .add(nombre) */
+                          var Newcredits = Number(creditsActuels) + Number(nombre)
                               var setCredits = `UPDATE tblclients SET credit='${Newcredits}' WHERE email='${actualmail}'`       
                               connection.query(setCredits, function (error, results, fields) {
                                   return interaction.update({
@@ -162,8 +163,9 @@ client.on('interactionCreate', async (interaction) => {
                     var getcredits = `SELECT * FROM botusers WHERE id='${interaction.user.id}'`
                     connection.query(getcredits, function (error, results, fields) {
                         var creditsActuels = results[0].balance
-                        var Newcredits = math.chain(creditsActuels)
-                                            .add(nombre)
+                        /* var Newcredits = math.chain(creditsActuels)
+                                            .add(nombre) */
+                        var Newcredits = Number(creditsActuels) + Number(nombre)
                             var setCredits = `UPDATE botusers SET balance='${Newcredits}' WHERE id='${interaction.user.id}'`       
                             connection.query(setCredits, function (error, results, fields) {
                                 return interaction.update({
@@ -185,8 +187,9 @@ client.on('interactionCreate', async (interaction) => {
                             var getcredits = `SELECT * FROM users WHERE email='${actualmail}'`
                             connection.query(getcredits, function (error, results, fields) {
                             var creditsActuels = results[0].credit
-                            var Newcredits = math.chain(creditsActuels)
-                                                .add(nombre)
+                            /* var Newcredits = math.chain(creditsActuels)
+                                                .add(nombre) */
+                            var Newcredits = Number(creditsActuels) + Number(nombre)
                                 var setCredits = `UPDATE users SET money='${Newcredits}' WHERE email='${actualmail}'`       
                                 connection.query(setCredits, function (error, results, fields) {
                                     return interaction.update({
