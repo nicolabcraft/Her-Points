@@ -152,22 +152,7 @@ module.exports = {
       config.Type;
     var connection = mysql.createConnection(config.Bdd);
     const verifsicoQuery = `SELECT * FROM users WHERE id ="${interaction.user.id}"`;
-    /* const results = await client.db
-      .prepare("SELECT * FROM ? WHERE id = ?")
-      .then((e) =>
-        e
-          .execute([
-            config.Type == "1" ? "users" : "botusers",
-            interaction.user.id,
-          ])
-          .then((r) => {
-            e.close();
-            return r;
-          })
-      ); */
-
-    const [results] = await client.db.execute("SELECT * FROM ? WHERE id = ?", [
-      config.Type == "1" ? "users" : "botusers",
+    const [results] = await client.db.execute(`SELECT * FROM ${config.Type == "1" ? "users" : "botusers"} WHERE id = ?`, [
       interaction.user.id,
     ]);
 
