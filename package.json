@@ -1,13 +1,13 @@
 {
-  "name": "discordjs-v14-bot-template",
-  "version": "14.0.0",
-  "description": "A Discord Bot template built by T.F.A#7524!",
+  "name": "her-points-bot",
+  "version": "1.0.0",
+  "description": "A Whmcs Point Bot built by NonozgYtb!",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "keywords": [],
-  "author": "T.F.A#7524",
+  "author": "NonozgYtb",
   "license": "ISC",
   "dependencies": {
     "better-sqlite3": "^7.6.2",
