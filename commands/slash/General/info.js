@@ -19,8 +19,9 @@ module.exports = {
     },
     run: async (client, interaction, config, db) => {
         var userr = interaction.options.get('utilisateur') 
-        var user = userr.user.id
-        verifsico = `SELECT * FROM users WHERE id ="${user}"`
+        var userid = userr.user.id
+        const user = interaction.options.getUser('user');
+        verifsico = `SELECT * FROM users WHERE id ="${userid}"`
         connection.query(gettimef(), function(error, results, fields) {
             if(results.length == 0){
                 interaction.reply({
@@ -43,7 +44,6 @@ module.exports = {
                 connection.query(aa, function (err, rows, fields) {
                     var bb = `SELECT * FROM tblclients WHERE email='${rows[0].email}'`
                     connection.query(bb, function (err, rowsss, fields) {
-                        const user = interaction.options.getUser('user');
                         const member = interaction.options.getMember('user');
                         const embed = new EmbedBuilder()
                             .setTitle(`Informations de ${user.tag}`)
