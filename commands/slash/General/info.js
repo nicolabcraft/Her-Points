@@ -21,8 +21,9 @@ module.exports = {
         var userr = interaction.options.get('utilisateur') 
         var userid = userr.user.id
         const user = interaction.options.getUser('utilisateur');
-        verifsico = `SELECT * FROM users WHERE id ="${userid}"`
-        connection.query(verifsico, function(error, results, fields) {
+          //! ONLY USE IN WHMCS
+        const verifsicoQuery = `SELECT * FROM users WHERE id ="${userid}"`
+        connection.query(verifsicoQuery, function(error, results, fields) {
             if(results.length == 0){
                 interaction.reply({
                     embeds: [
