@@ -5,7 +5,6 @@ const config = require("../../config/config.js");
 const mysql = require("mysql");
 const fetch = require("node-fetch");
 const https = require("https");
-const remind = require("../../remind.js");
 const httpsAgent = new https.Agent({
     rejectUnauthorized: false,
 });
