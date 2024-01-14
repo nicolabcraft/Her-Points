@@ -33,8 +33,8 @@ module.exports = {
                         {name:"Email", value: rows[0].email, inline: true}
                     )
                     .setThumbnail(user.displayAvatarURL({ dynamic: true }))
-                    .setColor("RANDOM");
                 interaction.reply({ embeds: [embed], ephemeral: true });
             })})
     },
 };
+
