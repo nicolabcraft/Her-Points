@@ -171,7 +171,7 @@ module.exports = {
                             //  exports.oldbalance = old_balance;
 
                             if(interaction.options._subcommand == "jour"){
-                                if(json.daily == "false") { // if user on cooldown
+                                if(!json.daily) { // if user on cooldown
                                     //add message here if code
                                     interaction.reply({
                                         content: `<@${interaction.user.id}>`,
@@ -213,7 +213,7 @@ module.exports = {
                             }
                             if(interaction.options._subcommand == "semaine"){
                             
-                                if(json.weekly == "false") { // if user on cooldown
+                                if(!json.weekly) { // if user on cooldown
                                     
                                     var dateFormat = new Date(Number(AAAAAAbb.weekly))
                                     dateFormat.setDate(dateFormat.getDate() + 7)
@@ -255,7 +255,7 @@ module.exports = {
 
                             if(interaction.options._subcommand == "mois"){
                             
-                                if(json.monthly == "false") { // if user on cooldown
+                                if(!json.monthly) { // if user on cooldown
                                     
                                     var dateFormat = new Date(Number(AAAAAAbb.monthly))
                                     dateFormat.setDate(dateFormat.getDate() + 30.4167)
