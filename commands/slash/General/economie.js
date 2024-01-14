@@ -152,9 +152,10 @@ module.exports = {
       config.Type;
     var connection = mysql.createConnection(config.Bdd);
     const verifsicoQuery = `SELECT * FROM users WHERE id ="${interaction.user.id}"`;
-    const [results] = await client.db.execute(`SELECT * FROM ${config.Type == "1" ? "users" : "botusers"} WHERE id = ?`, [
-      interaction.user.id,
-    ]);
+    const [results] = await client.db.execute(
+      `SELECT * FROM ${config.Type == "1" ? "users" : "botusers"} WHERE id = ?`,
+      [interaction.user.id]
+    );
 
     if (results.length == 0) {
       interaction.reply({
@@ -388,27 +389,26 @@ module.exports = {
                 } else {
                   if ((config.Type = "2")) {
                     let gettransf = `SELECT * FROM botusers WHERE id=${interaction.user.id}`;
-                    
-                  client.db.execute(gettransf).then(function ( [results]) {
-                        if ((results[0].autotransfert = "off")) {
-                          givecredits(
-                            "discord",
-                            coins_monthly,
-                            "monthlytime",
-                            "monthlyremind",
-                            "monthly"
-                          );
-                        } else {
-                          givecredits(
-                            "manager",
-                            coins_monthly,
-                            "monthlytime",
-                            "monthlyremind",
-                            "monthly"
-                          );
-                        }
+
+                    client.db.execute(gettransf).then(function ([results]) {
+                      if ((results[0].autotransfert = "off")) {
+                        givecredits(
+                          "discord",
+                          coins_monthly,
+                          "monthlytime",
+                          "monthlyremind",
+                          "monthly"
+                        );
+                      } else {
+                        givecredits(
+                          "manager",
+                          coins_monthly,
+                          "monthlytime",
+                          "monthlyremind",
+                          "monthly"
+                        );
                       }
-                    );
+                    });
                   }
                 }
               }
@@ -508,7 +508,7 @@ module.exports = {
                 let gettime = `SELECT * FROM users WHERE id=${interaction.user.id}`;
 
                 //connection.query(gettime, function (error, results, fields) {
-                    client.db.execute(gettime).then(function ( [results]) {
+                client.db.execute(gettime).then(function ([results]) {
                   if (error) {
                     return interaction.reply({
                       content: `<@${interaction.user.id}>`,
@@ -558,7 +558,9 @@ module.exports = {
           if (interaction.options._subcommand == "transfert") {
             if (config.Type == "1") {
               var Verifsiilestconnecté = `SELECT * FROM users WHERE id="${interaction.user.id}"`;
-              client.db.execute(Verifsiilestconnecté).then(function ( [results]) {
+              client.db
+                .execute(Verifsiilestconnecté)
+                .then(function ([results]) {
                   var résultats = results.length;
 
                   if (résultats == 0) {
@@ -573,7 +575,7 @@ module.exports = {
                     });
                   } else {
                     var GetOlbBal = `SELECT * FROM users WHERE id="${interaction.user.id}"`;
-                    client.db.execute(GetOlbBal).then(function ( [results]) {
+                    client.db.execute(GetOlbBal).then(function ([results]) {
                       if (error) {
                         return interaction.reply({
                           content: `<@${interaction.user.id}>`,
@@ -589,44 +591,45 @@ module.exports = {
                       } else {
                         var GetBal = `SELECT * FROM tblclients WHERE email="${row[0].email}"`;
 
-                        client.db.execute(GetBal).then(function ( [rows]) {
+                        client.db.execute(GetBal).then(function ([rows]) {
                           var balmanager = rows[0].credit;
                           var baldiscord = row[0].balance;
                           var newbal = math.chain(balmanager).add(baldiscord);
 
                           var addpoints = `UPDATE tblclients SET credit="${newbal}.00" WHERE email="${row[0].email}"`;
-                          client.db.execute(addpoints).then(function ( []) {
-                              var retirerpoints = `UPDATE users SET balance="0" WHERE id="${interaction.user.id}"`;
-                              client.db.execute(retirerpoints).then(function ( []) {
-                                  return interaction.reply({
-                                    content: `<@${interaction.user.id}>`,
-                                    embeds: [
-                                      new EmbedBuilder()
-                                        .setDescription(
-                                          "Vous avez transféré " +
-                                            baldiscord +
-                                            " points sur le manager!\nVous disposez maintenant de " +
-                                            newbal +
-                                            " points!"
-                                        )
-                                        .setColor("Green"),
-                                    ],
-                                    ephemeral: false,
-                                  });
-                                }
-                              );
-                            }
-                          );
+                          client.db.execute(addpoints).then(function ([]) {
+                            var retirerpoints = `UPDATE users SET balance="0" WHERE id="${interaction.user.id}"`;
+                            client.db
+                              .execute(retirerpoints)
+                              .then(function ([]) {
+                                return interaction.reply({
+                                  content: `<@${interaction.user.id}>`,
+                                  embeds: [
+                                    new EmbedBuilder()
+                                      .setDescription(
+                                        "Vous avez transféré " +
+                                          baldiscord +
+                                          " points sur le manager!\nVous disposez maintenant de " +
+                                          newbal +
+                                          " points!"
+                                      )
+                                      .setColor("Green"),
+                                  ],
+                                  ephemeral: false,
+                                });
+                              });
+                          });
                         });
                       }
                     });
                   }
-                }
-              );
+                });
             } else {
               var Verifsiilestconnecté = `SELECT * FROM botusers WHERE id="${interaction.user.id}"`;
 
-              client.db.execute(Verifsiilestconnecté).then(function ( [results]) {
+              client.db
+                .execute(Verifsiilestconnecté)
+                .then(function ([results]) {
                   var résultats = results.length;
 
                   if (résultats == 0) {
@@ -642,8 +645,7 @@ module.exports = {
                   } else {
                     var GetOlbBal = `SELECT * FROM botusers WHERE id="${interaction.user.id}"`;
 
-                    
-                        client.db.execute(GetOlbBal).then(function ( [rows]) {
+                    client.db.execute(GetOlbBal).then(function ([rows]) {
                       if (error) {
                         return interaction.reply({
                           content: `<@${interaction.user.id}>`,
@@ -659,51 +661,49 @@ module.exports = {
                       } else {
                         var GetBal = `SELECT * FROM users WHERE email="${row[0].email}"`;
 
-                        
-                            client.db.execute(GetBal).then(function ( [rows]) {
+                        client.db.execute(GetBal).then(function ([rows]) {
                           var balmanager = rows[0].money;
                           var baldiscord = row[0].balance;
                           var newbal = math.chain(balmanager).add(baldiscord);
 
                           var addpoints = `UPDATE users SET money="${newbal}.00" WHERE email="${row[0].email}"`;
-                          client.db.execute(addpoints).then(function ( []) {
-                              var retirerpoints = `UPDATE botusers SET balance="0" WHERE id="${interaction.user.id}"`;
-                              
-                                    client.db.execute(retirerpoints).then(function ( []) {
-                                  return interaction.reply({
-                                    content: `<@${interaction.user.id}>`,
-                                    embeds: [
-                                      new EmbedBuilder()
-                                        .setDescription(
-                                          "Vous avez transféré " +
-                                            baldiscord +
-                                            " points sur le manager!\nVous disposez maintenant de " +
-                                            newbal +
-                                            " points!"
-                                        )
-                                        .setColor("Green"),
-                                    ],
-                                    ephemeral: false,
-                                  });
-                                }
-                              );
-                            }
-                          );
+                          client.db.execute(addpoints).then(function ([]) {
+                            var retirerpoints = `UPDATE botusers SET balance="0" WHERE id="${interaction.user.id}"`;
+
+                            client.db
+                              .execute(retirerpoints)
+                              .then(function ([]) {
+                                return interaction.reply({
+                                  content: `<@${interaction.user.id}>`,
+                                  embeds: [
+                                    new EmbedBuilder()
+                                      .setDescription(
+                                        "Vous avez transféré " +
+                                          baldiscord +
+                                          " points sur le manager!\nVous disposez maintenant de " +
+                                          newbal +
+                                          " points!"
+                                      )
+                                      .setColor("Green"),
+                                  ],
+                                  ephemeral: false,
+                                });
+                              });
+                          });
                         });
                       }
                     });
                   }
-                }
-              );
+                });
             }
           }
 
           if (interaction.options._subcommand == "solde") {
             if (config.Type == "1") {
               var aa = `SELECT * FROM users WHERE id="${interaction.user.id}"`;
-                client.db.execute(aa).then(function ( [rows]) {
+              client.db.execute(aa).then(function ([rows]) {
                 var bb = `SELECT * FROM tblclients WHERE email='${rows[0].email}'`;
-                    client.db.execute(bb).then(function ( [rowsss]) {
+                client.db.execute(bb).then(function ([rowsss]) {
                   return interaction.reply({
                     content: `<@${interaction.user.id}>`,
                     embeds: [
@@ -719,9 +719,9 @@ module.exports = {
               });
             } else {
               var aa = `SELECT * FROM botusers WHERE id="${interaction.user.id}"`;
-                client.db.execute(aa).then(function ( [rows]) {
+              client.db.execute(aa).then(function ([rows]) {
                 var bb = `SELECT * FROM users WHERE email='${rows[0].email}'`;
-                    client.db.execute(bb).then(function ( [rowsss]) {
+                client.db.execute(bb).then(function ([rowsss]) {
                   return interaction.reply({
                     content: `<@${interaction.user.id}>`,
                     embeds: [
@@ -750,70 +750,66 @@ module.exports = {
               var user = userr.user.id;
               if (config.Type == "1") {
                 var GetActualMoney = `SELECT * FROM users WHERE id="${user}"`;
-                    client.db.execute(GetActualMoney).then(function ( [rowsss]) {
-                    if (rowsss.length == "0") {
-                      return interaction.reply({
-                        content: `<@${interaction.user.id}>`,
-                        embeds: [
-                          new EmbedBuilder()
-                            .setDescription(`L'utilisateur n'est pas connecté.`)
-                            .setColor("Red"),
-                        ],
-                        ephemeral: true,
-                      });
-                    }
-                    var actualMoney = rowsss[0].balance;
-                    var NewBalance = math.chain(actualMoney).add(moneytoadd);
-                    var SetNewBalance = `UPDATE users SET balance="${NewBalance}" WHERE id="${user}"`;
-                        client.db.execute(SetNewBalance).then(function ( [rows]) {
-                        return interaction.reply({
-                          content: `<@${interaction.user.id}>`,
-                          embeds: [
-                            new EmbedBuilder()
-                              .setDescription(
-                                `L'utilisateur dispose désormais de ${NewBalance} points.`
-                              )
-                              .setColor("Green"),
-                          ],
-                          ephemeral: true,
-                        });
-                      }
-                    );
+                client.db.execute(GetActualMoney).then(function ([rowsss]) {
+                  if (rowsss.length == "0") {
+                    return interaction.reply({
+                      content: `<@${interaction.user.id}>`,
+                      embeds: [
+                        new EmbedBuilder()
+                          .setDescription(`L'utilisateur n'est pas connecté.`)
+                          .setColor("Red"),
+                      ],
+                      ephemeral: true,
+                    });
                   }
-                );
+                  var actualMoney = rowsss[0].balance;
+                  var NewBalance = math.chain(actualMoney).add(moneytoadd);
+                  var SetNewBalance = `UPDATE users SET balance="${NewBalance}" WHERE id="${user}"`;
+                  client.db.execute(SetNewBalance).then(function ([rows]) {
+                    return interaction.reply({
+                      content: `<@${interaction.user.id}>`,
+                      embeds: [
+                        new EmbedBuilder()
+                          .setDescription(
+                            `L'utilisateur dispose désormais de ${NewBalance} points.`
+                          )
+                          .setColor("Green"),
+                      ],
+                      ephemeral: true,
+                    });
+                  });
+                });
               } else {
                 var GetActualMoney = `SELECT * FROM botusers WHERE id="${user}"`;
-                    client.db.execute(GetActualMoney).then(function ( [rowsss]) {
-                    if (rowsss.length == "0") {
-                      return interaction.reply({
-                        content: `<@${interaction.user.id}>`,
-                        embeds: [
-                          new EmbedBuilder()
-                            .setDescription(`L'utilisateur n'est pas connecté.`)
-                            .setColor("Red"),
-                        ],
-                        ephemeral: true,
-                      });
-                    }
-                    var actualMoney = rowsss[0].balance;
-                    var NewBalance = math.chain(actualMoney).add(moneytoadd);
-                    var SetNewBalance = `UPDATE botusers SET balance="${NewBalance}" WHERE id="${user}"`;
-                        client.db.execute(SetNewBalance).then(function ( [rows]) {
-                        return interaction.reply({
-                          content: `<@${interaction.user.id}>`,
-                          embeds: [
-                            new EmbedBuilder()
-                              .setDescription(
-                                `L'utilisateur dispose désormais de ${NewBalance} points.`
-                              )
-                              .setColor("Green"),
-                          ],
-                          ephemeral: true,
-                        });
-                      }
-                    );
+                client.db.execute(GetActualMoney).then(function ([rowsss]) {
+                  if (rowsss.length == "0") {
+                    return interaction.reply({
+                      content: `<@${interaction.user.id}>`,
+                      embeds: [
+                        new EmbedBuilder()
+                          .setDescription(`L'utilisateur n'est pas connecté.`)
+                          .setColor("Red"),
+                      ],
+                      ephemeral: true,
+                    });
                   }
-                );
+                  var actualMoney = rowsss[0].balance;
+                  var NewBalance = math.chain(actualMoney).add(moneytoadd);
+                  var SetNewBalance = `UPDATE botusers SET balance="${NewBalance}" WHERE id="${user}"`;
+                  client.db.execute(SetNewBalance).then(function ([rows]) {
+                    return interaction.reply({
+                      content: `<@${interaction.user.id}>`,
+                      embeds: [
+                        new EmbedBuilder()
+                          .setDescription(
+                            `L'utilisateur dispose désormais de ${NewBalance} points.`
+                          )
+                          .setColor("Green"),
+                      ],
+                      ephemeral: true,
+                    });
+                  });
+                });
               }
             }
           }
@@ -830,70 +826,66 @@ module.exports = {
               var user = userr.user.id;
               if (config.Type == "1") {
                 var GetActualMoney = `SELECT * FROM users WHERE id="${user}"`;
-                    client.db.execute(GetActualMoney).then(function ( [rowsss]) {
-                    if (rowsss.length == "0") {
-                      return interaction.reply({
-                        content: `<@${interaction.user.id}>`,
-                        embeds: [
-                          new EmbedBuilder()
-                            .setDescription(`L'utilisateur n'est pas connecté.`)
-                            .setColor("Red"),
-                        ],
-                        ephemeral: true,
-                      });
-                    }
-                    var actualMoney = rowsss[0].balance;
-                    var NewBalance = math.subtract(actualMoney, moneytoadd);
-                    var SetNewBalance = `UPDATE users SET balance="${NewBalance}" WHERE id="${user}"`;
-                        client.db.execute(SetNewBalance).then(function ( [rows]) {
-                        return interaction.reply({
-                          content: `<@${interaction.user.id}>`,
-                          embeds: [
-                            new EmbedBuilder()
-                              .setDescription(
-                                `L'utilisateur dispose désormais de ${NewBalance} points.`
-                              )
-                              .setColor("Green"),
-                          ],
-                          ephemeral: true,
-                        });
-                      }
-                    );
+                client.db.execute(GetActualMoney).then(function ([rowsss]) {
+                  if (rowsss.length == "0") {
+                    return interaction.reply({
+                      content: `<@${interaction.user.id}>`,
+                      embeds: [
+                        new EmbedBuilder()
+                          .setDescription(`L'utilisateur n'est pas connecté.`)
+                          .setColor("Red"),
+                      ],
+                      ephemeral: true,
+                    });
                   }
-                );
+                  var actualMoney = rowsss[0].balance;
+                  var NewBalance = math.subtract(actualMoney, moneytoadd);
+                  var SetNewBalance = `UPDATE users SET balance="${NewBalance}" WHERE id="${user}"`;
+                  client.db.execute(SetNewBalance).then(function ([rows]) {
+                    return interaction.reply({
+                      content: `<@${interaction.user.id}>`,
+                      embeds: [
+                        new EmbedBuilder()
+                          .setDescription(
+                            `L'utilisateur dispose désormais de ${NewBalance} points.`
+                          )
+                          .setColor("Green"),
+                      ],
+                      ephemeral: true,
+                    });
+                  });
+                });
               } else {
                 var GetActualMoney = `SELECT * FROM botusers WHERE id="${user}"`;
-                    client.db.execute(GetActualMoney).then(function ( [rowsss]) {
-                    if (rowsss.length == "0") {
-                      return interaction.reply({
-                        content: `<@${interaction.user.id}>`,
-                        embeds: [
-                          new EmbedBuilder()
-                            .setDescription(`L'utilisateur n'est pas connecté.`)
-                            .setColor("Red"),
-                        ],
-                        ephemeral: true,
-                      });
-                    }
-                    var actualMoney = rowsss[0].balance;
-                    var NewBalance = math.subtract(actualMoney, moneytoadd);
-                    var SetNewBalance = `UPDATE botusers SET balance="${NewBalance}" WHERE id="${user}"`;
-                        client.db.execute(SetNewBalance).then(function ( [rows]) {
-                        return interaction.reply({
-                          content: `<@${interaction.user.id}>`,
-                          embeds: [
-                            new EmbedBuilder()
-                              .setDescription(
-                                `L'utilisateur dispose désormais de ${NewBalance} points.`
-                              )
-                              .setColor("Green"),
-                          ],
-                          ephemeral: true,
-                        });
-                      }
-                    );
+                client.db.execute(GetActualMoney).then(function ([rowsss]) {
+                  if (rowsss.length == "0") {
+                    return interaction.reply({
+                      content: `<@${interaction.user.id}>`,
+                      embeds: [
+                        new EmbedBuilder()
+                          .setDescription(`L'utilisateur n'est pas connecté.`)
+                          .setColor("Red"),
+                      ],
+                      ephemeral: true,
+                    });
                   }
-                );
+                  var actualMoney = rowsss[0].balance;
+                  var NewBalance = math.subtract(actualMoney, moneytoadd);
+                  var SetNewBalance = `UPDATE botusers SET balance="${NewBalance}" WHERE id="${user}"`;
+                  client.db.execute(SetNewBalance).then(function ([rows]) {
+                    return interaction.reply({
+                      content: `<@${interaction.user.id}>`,
+                      embeds: [
+                        new EmbedBuilder()
+                          .setDescription(
+                            `L'utilisateur dispose désormais de ${NewBalance} points.`
+                          )
+                          .setColor("Green"),
+                      ],
+                      ephemeral: true,
+                    });
+                  });
+                });
               }
             }
           }
@@ -928,7 +920,7 @@ module.exports = {
         }
       }
     } */
-    /*     function gettimef() {
+    function gettimef() {
       if (config.Type == "1") {
         return "SELECT * FROM users";
       } else {
@@ -936,7 +928,7 @@ module.exports = {
           return "SELECT * FROM botusers";
         }
       }
-    } */
+    }
 
     function givecredits(endroit, nombre, type, remind, secondtable) {
       var datenow = Date.now();
