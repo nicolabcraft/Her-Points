@@ -3,7 +3,7 @@
 
 var execSync = require("child_process").execSync;
 
-var check = function (fallback=()=>{}) {
+var check = function () {
 
     const branch = execSync("git rev-parse --abbrev-ref HEAD").toString().trim();
 
@@ -13,24 +13,23 @@ var check = function (fallback=()=>{}) {
     } catch (e) {
         console.log("[GIT] Git is not installed.");
         process.exit();
-        return;
     }
     
     //const branch = process.env. execSync("git rev-parse --abbrev-ref HEAD").toString().trim();
 
     execSync("git fetch");
 
-    // check if remote commit is different from local commit
-    const stdout = execSync(`git diff --name-only origin/${branch}`).toString().trim();
-    const isDifferent = stdout.length > 0;
+    // get local hash
+    const localHash = execSync("git rev-parse HEAD").toString().trim();
+    // get remote hash
+    const remoteHash = execSync("git rev-parse @{u}").toString().trim();
 
-    if (isDifferent) {
+    if (localHash!==remoteHash) {
         console.log("[GIT] App crashed because there is a new version of the bot.");
         process.exit();
     } else {
         const hash = execSync("git rev-parse HEAD").toString().trim();
-        console.log(`[GIT] The bot is up to date. (${hash})`);
-        fallback();
+        console.log(`[GIT] The bot is up to date. (${localHash})`);
     }
 };
 module.exports = check;
