@@ -17,7 +17,7 @@ var check = function () {
     
     //const branch = process.env. execSync("git rev-parse --abbrev-ref HEAD").toString().trim();
 
-    execSync("git fetch");
+    execSync("git fetch --quiet");
 
     // get local hash
     const localHash = execSync("git rev-parse HEAD").toString().trim();
