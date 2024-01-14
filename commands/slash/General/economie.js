@@ -128,11 +128,10 @@ module.exports = {
         DEFAULT_MEMBER_PERMISSIONS: "SendMessages"
     },
     run: async (client, interaction, config) => {
-
         let url = config.Url + "?key=" + config.UrlKey + "&id=" + interaction.user.id + "&conf=" + config.Type
         var connection = mysql.createConnection(config.Bdd);
-
-        connection.query(gettimef(), function(error, results, fields) {
+        verifsico = `SELECT * FROM users WHERE id ="${userid}"`
+        connection.query(verifsico, function(error, results, fields) {
             if(results.length == 0){
                 interaction.reply({
                     embeds: [
@@ -712,31 +711,30 @@ module.exports = {
                         }
                 })
             }
-
-            function verifsico(){
-                if(config.Type == "1"){
-                    var Verifsiilestconnecté = `SELECT * FROM users WHERE id="${interaction.user.id}"`
+        })
+        
+        function verifsico(){
+            if(config.Type == "1"){
+                var Verifsiilestconnecté = `SELECT * FROM users WHERE id="${interaction.user.id}"`
+                connection.query(Verifsiilestconnecté, function(error, results, fields) {
+                    var résultats = results.length
+                    console.log(résultats)
+                    if(résultats == "0"){
+                        return false;
+                    }
+                })
+            }else{
+                if(config.Type == "2"){
+                    var Verifsiilestconnecté = `SELECT * FROM botusers WHERE id="${interaction.user.id}"`
                     connection.query(Verifsiilestconnecté, function(error, results, fields) {
                         var résultats = results.length
-                        console.log(résultats)
-                        if(résultats == "0"){
-                            return false;
+                        if(résultats == 0){
+                            return "false";
                         }
                     })
-                }else{
-                    if(config.Type == "2"){
-                        var Verifsiilestconnecté = `SELECT * FROM botusers WHERE id="${interaction.user.id}"`
-                        connection.query(Verifsiilestconnecté, function(error, results, fields) {
-                            var résultats = results.length
-                            if(résultats == 0){
-                                return "false";
-                            }
-                        })
-                    }
                 }
             }
-        })
-
+        }
         function gettimef(){
             if(config.Type == "1"){
                 return "SELECT * FROM users";
