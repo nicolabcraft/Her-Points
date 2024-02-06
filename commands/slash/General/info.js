@@ -60,7 +60,10 @@ module.exports = {
                                 {name:"Nom d'utilisateur", value: user.username, inline: true},
                                 {name:"Solde (Discord)", value: rows[0].balance, inline: true},
                                 {name:"Crédit (En ligne)", value: rowsss[0].credit.toString(), inline: true},
-                                {name:"Email", value: rows[0].email, inline: true}
+                                {name:"Email", value: rows[0].email, inline: true},
+                                {name:"Crée le", value: rows[0].datecreated, inline: true},
+                                {name:"Dernière connexion", value: rows[0].lastlogin, inline: true},
+                                {name:"Status du compte", value: rowsss[0].status, inline: true},
                             )
                             .setThumbnail(user.displayAvatarURL({ dynamic: true }))
                         interaction.reply({ embeds: [embed], ephemeral: false });
